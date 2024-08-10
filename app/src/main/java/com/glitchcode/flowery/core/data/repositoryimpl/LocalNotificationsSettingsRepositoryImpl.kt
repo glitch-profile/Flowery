@@ -4,11 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.glitchcode.flowery.core.domain.repository.LocalNotificationsSettingsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 private const val PREFERENCES_NAME = "NotificationSettings"
 private const val SAVED_FCM_TOKEN = "lastSavedFcmToken"
 
-class LocalNotificationsSettingsRepositoryImpl(
+class LocalNotificationsSettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ): LocalNotificationsSettingsRepository {
 

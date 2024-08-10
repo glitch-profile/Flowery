@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.glitchcode.flowery.core.domain.repository.LocalAppearanceSettingsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
 private const val PREFERENCES_NAME = "AppearanceSettings"
 private const val IS_USING_SYSTEM_THEME = "isUsingSystemTheme"
@@ -11,7 +12,7 @@ private const val IS_USING_DARK_THEME = "isUsingDarkTheme"
 private const val IS_USING_DYNAMIC_COLOR = "isUsingDynamicColor"
 private const val IS_USING_SYSTEM_LOCALE = "isUsingSystemLocale"
 
-class LocalAppearanceSettingsRepositoryImpl(
+class LocalAppearanceSettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ): LocalAppearanceSettingsRepository {
 
