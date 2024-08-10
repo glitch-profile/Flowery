@@ -1,4 +1,4 @@
-package com.glitchcode.myapplication
+package com.glitchcode.flowery
 
 import org.junit.Test
 

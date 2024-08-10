@@ -1,4 +1,4 @@
-package com.glitchcode.myapplication.ui.theme
+package com.glitchcode.flowery.core.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.glitchcode.myapplication.ui.theme
+package com.glitchcode.flowery.core.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

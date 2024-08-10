@@ -1,4 +1,4 @@
-package com.glitchcode.myapplication.ui.theme
+package com.glitchcode.flowery.core.theme
 
 import android.app.Activity
 import android.os.Build
@@ -39,26 +39,36 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun FloweryTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    useSystemTheme: Boolean = true,
+    useDarkTheme: Boolean = false,
+    useDynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+    val colorScheme = if (useDynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        //dynamic color supported and enabled
+        val context = LocalContext.current
+        if (useSystemTheme) {
+            if (isSystemInDarkTheme()) dynamicDarkColorScheme(context)
+            else dynamicLightColorScheme(context)
+        } else {
+            if (useDarkTheme) dynamicDarkColorScheme(context)
+            else dynamicLightColorScheme(context)
         }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+    } else {
+        //dynamic color not supported
+        if (useSystemTheme) {
+            if (isSystemInDarkTheme()) darkColorScheme() else lightColorScheme()
+        } else {
+            if (useDarkTheme) darkColorScheme() else lightColorScheme()
+        }
     }
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = useDarkTheme
         }
     }
 

@@ -1,4 +1,4 @@
-package com.glitchcode.myapplication
+package com.glitchcode.flowery
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
