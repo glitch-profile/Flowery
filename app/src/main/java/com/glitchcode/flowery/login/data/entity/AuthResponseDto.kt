@@ -1,9 +1,11 @@
-package com.glitchcode.flowery.core.data.dto.auth
+package com.glitchcode.flowery.login.data.entity
 
+import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
+@Keep
 @Serializable
-data class AuthResponseModel(
+data class AuthResponseDto(
     val personId: String,
     val clientId: String?,
     val employeeId: String?,

@@ -4,8 +4,14 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
 import androidx.core.view.WindowCompat
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.glitchcode.flowery.core.theme.FloweryTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,7 +34,25 @@ class MainActivity : AppCompatActivity() {
                 useDarkTheme = isUseDarkTheme.value,
                 useDynamicColor = isUseDynamicColors.value
             ) {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    val navController = rememberNavController()
+                    val startDestination = viewModel.startDestination
 
+                    NavHost(
+                        navController = navController,
+                        startDestination = startDestination
+                    ) {
+                        composable("login-screen") {
+
+                        }
+                        composable("main-screen") {
+
+                        }
+                    }
+                }
             }
         }
     }
