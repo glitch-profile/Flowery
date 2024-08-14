@@ -46,7 +46,7 @@ class LocalAppearanceSettingsRepositoryImpl @Inject constructor(
     private var isUsingDynamicColor: Boolean? = null
     override fun getIsUsingDynamicColor(): Boolean {
         return isUsingDynamicColor ?: kotlin.run {
-            isUsingDynamicColor = preferences.getBoolean(IS_USING_DYNAMIC_COLOR, true)
+            isUsingDynamicColor = preferences.getBoolean(IS_USING_DYNAMIC_COLOR, false)
             isUsingDynamicColor!!
         }
     }
