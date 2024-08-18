@@ -11,5 +11,5 @@ sealed class Resource<T>(
     class Error<T>(
         data: T? = null,
         message: String
-    )
+    ): Resource<T>(data, message)
 }

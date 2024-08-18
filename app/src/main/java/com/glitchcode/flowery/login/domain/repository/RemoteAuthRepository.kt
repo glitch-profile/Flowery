@@ -23,10 +23,18 @@ interface RemoteAuthRepository {
         sessionId: String
     ): Resource<AuthResponseDto>
 
-    suspend fun loginAsGuest(): Resource<AuthResponseDto>
+//    suspend fun loginAsGuest(): Resource<AuthResponseDto>
+
+    suspend fun checkSessionStatus(
+        sessionId: String
+    ): Resource<Unit>
+
+    suspend fun updateAuthInfo(
+        sessionId: String
+    ): Resource<AuthResponseDto>
 
     suspend fun logout(
         sessionId: String
-    )
+    ): Resource<Unit>
 
 }
