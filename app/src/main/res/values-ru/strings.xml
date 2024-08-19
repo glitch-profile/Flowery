@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Flowery</string>
+
+    <!-- NOTIFICATION COMPONENT -->
+    <string name="swipeable_notification_unknown_error_title">Неизвестная ошибка</string>
+    <string name="swipeable_notification_unknown_error_text">Описание не предоставлено</string>
+</resources>

@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.glitchcode.flowery.core.theme.FloweryTheme
+import com.glitchcode.flowery.login.presentation.LoginScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -46,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                         startDestination = startDestination
                     ) {
                         composable("login-screen") {
-
+                            LoginScreen()
                         }
                         composable("main-screen") {
 

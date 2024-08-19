@@ -20,7 +20,7 @@ class MainActivityViewModel @Inject constructor(
     private val appearanceSettings: LocalAppearanceSettingsRepository
 ): ViewModel() {
 
-    val startDestination = getStartDestination()
+    val startDestination = getStartRoute()
 
     private val _isUseSystemColorTheme = MutableStateFlow(true)
     val isUseSystemColorTheme = _isUseSystemColorTheme.asStateFlow()
@@ -59,7 +59,7 @@ class MainActivityViewModel @Inject constructor(
         _isUseDynamicColors.update { appearanceSettings.getIsUsingDynamicColor() }
     }
 
-    private fun getStartDestination(): String {
+    private fun getStartRoute(): String {
         return if (localAuthData.getUserSessionId() != null) {
             "main-screen"
         } else {

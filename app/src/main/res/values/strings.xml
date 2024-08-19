@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Flowery</string>
+
+    <!-- NOTIFICATION COMPONENT -->
+    <string name="swipeable_notification_unknown_error_title">Unknown error</string>
+    <string name="swipeable_notification_unknown_error_text">No description provided</string>
 </resources>
