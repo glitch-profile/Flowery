@@ -10,13 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.glitchcode.flowery.R
-import com.glitchcode.flowery.core.presentation.components.notification.SwipeableNotificationHolder
+import com.glitchcode.flowery.core.presentation.components.notification.SwipeableNotification
 
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
-    val notificationState = viewModel.notificationState.collectAsState()
+    val notificationState = viewModel.notificationState
 
     Box(
         modifier = Modifier
@@ -36,5 +36,5 @@ fun LoginScreen(
         }
     }
 
-    SwipeableNotificationHolder(notificationState = notificationState.value)
+    SwipeableNotification(notificationState = notificationState)
 }
