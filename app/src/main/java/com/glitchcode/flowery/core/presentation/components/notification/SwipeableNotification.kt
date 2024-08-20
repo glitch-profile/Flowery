@@ -45,7 +45,7 @@ fun SwipeableNotification(
         val scope = rememberCoroutineScope()
         val maxHeight = 200f
         val translationY = remember {
-            Animatable(0f, maxHeight)
+            Animatable(maxHeight, 0f)
         }
         val decay = rememberSplineBasedDecay<Float>()
         translationY.updateBounds(0f, maxHeight)
