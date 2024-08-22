@@ -121,7 +121,7 @@ fun SwipeableNotification(
                             }
                         }
                     ),
-                shape = MaterialTheme.shapes.medium,
+                shape = MaterialTheme.shapes.small,
                 color = MaterialTheme.colorScheme.inverseSurface,
                 contentColor = MaterialTheme.colorScheme.inverseOnSurface,
             ) {
