@@ -107,8 +107,7 @@ fun FloweryTextField(
                             else placeHolderColor,
                             label = "remainingCharactersCountColorChange"
                         )
-
-                        Spacer(modifier = Modifier.width(8.dp))
+                        
                         Box(
                             modifier = Modifier
                                 .width(40.dp)
