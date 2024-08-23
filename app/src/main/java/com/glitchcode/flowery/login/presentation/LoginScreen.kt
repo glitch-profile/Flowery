@@ -26,9 +26,6 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val notificationState = viewModel.notificationState
-    var number by remember {
-        mutableIntStateOf(0)
-    }
     
     Column(
         modifier = Modifier
@@ -58,7 +55,7 @@ fun LoginScreen(
             },
             titleText = "Description",
             labelText = "Enter description...",
-            charactersLimit = 100
+            charactersLimit = null
         )
 //        Spacer(modifier = Modifier.height(16.dp))
 //        FloweryTextField(

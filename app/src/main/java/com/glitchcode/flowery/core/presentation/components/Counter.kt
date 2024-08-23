@@ -22,6 +22,7 @@ import androidx.compose.ui.text.TextStyle
 fun CounterDynamic(
     modifier: Modifier = Modifier,
     count: Int,
+    extraChars: Int = 1,
     style: TextStyle = LocalTextStyle.current,
     color: Color = LocalTextStyle.current.color
 ) {
@@ -34,16 +35,16 @@ fun CounterDynamic(
     Row(modifier = modifier) {
         val oldText = oldCount.toString()
         val text = count.toString()
-        for (i in 0..text.length) { // getting a small amount of extra text fields
+        for (i in 0..text.length + extraChars) { // getting a small amount of extra text fields
             val oldChar = oldText.getOrNull(i) ?: ""
             val newChar = text.getOrNull(i) ?: ""
-            val char = if (oldChar == newChar) {
+            val currentChar = if (oldChar == newChar) {
                 oldText.getOrNull(i) ?: ""
             } else {
                 text.getOrNull(i) ?: ""
             }
             AnimatedContent(
-                targetState = char,
+                targetState = currentChar,
                 transitionSpec = {
                     slideInVertically(
                         animationSpec = spring(
@@ -82,7 +83,9 @@ fun CounterFixed(
     SideEffect {
         oldCount = count
     }
-    Row(modifier = modifier) {
+    Row(
+        modifier = modifier
+    ) {
         val oldText = oldCount.toString()
         val text = count.toString()
         val normalizedOldText = if (invertDirection) {
@@ -94,13 +97,13 @@ fun CounterFixed(
         for (i in normalizedNewText.indices) {
             val oldChar = normalizedOldText.getOrNull(i)
             val newChar = normalizedNewText.getOrNull(i)
-            val char = if (oldChar == newChar) {
+            val currentChar = if (oldChar == newChar) {
                 normalizedOldText.getOrNull(i) ?: ""
             } else {
                 normalizedNewText.getOrNull(i) ?: ""
             }
             AnimatedContent(
-                targetState = char,
+                targetState = currentChar,
                 transitionSpec = {
                     slideInVertically(
                         animationSpec = spring(stiffness = 1000f)
