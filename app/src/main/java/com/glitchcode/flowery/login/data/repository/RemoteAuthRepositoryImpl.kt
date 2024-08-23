@@ -30,7 +30,7 @@ class RemoteAuthRepositoryImpl @Inject constructor(
                 phone = phoneNumber,
                 code = null
             )
-            val response: ApiResponseDto<Unit> = client.post("$PATH/login-client") {
+            val response: ApiResponseDto<Unit> = client.post("$PATH/login-phone") {
                 setBody(authRequestData)
                 contentType(ContentType.Application.Json)
             }.body()
