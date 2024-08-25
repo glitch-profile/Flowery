@@ -1,7 +1,26 @@
 <resources>
     <string name="app_name">Flowery</string>
 
+    <!-- API RESPONSE MESSAGE CODES -->
+    <string name="api_response_code_unknown">Unknown error occurred</string>
+    <string name="api_response_code_ok">Success</string>
+    <!-- RESPONSE STATUS CODES -->
+    <string name="api_response_code_unauthorized">You are unauthorized. Please, login again</string>
+    <string name="api_response_code_forbidden">You don\'t have permission to access this content</string>
+    <string name="api_response_code_bad_request">Incorrect request. Please check input data or update the app</string>
+    <string name="api_response_code_not_found">Data not found</string>
+    <string name="api_response_code_connect_timeout">Unable to connect to server</string>
+    <string name="api_response_code_socket_connection_error">Unable to establish a connection</string>
+    <!-- AUTH -->
+    <string name="api_response_code_user_not_found">User not found</string>
+    <string name="api_response_code_session_not_found">Session not found or expired</string>
+    <string name="api_response_code_auth_data_incorrect">User with such login and password was not found</string>
+    <string name="api_response_code_phone_not_found">No user with this phone number was found</string>
+    <string name="api_response_code_phone_incorrect">Phone number entered incorrectly</string>
+    <string name="api_response_code_code_incorrect">This confirmation code is incorrect</string>
+
     <!-- NOTIFICATION COMPONENT -->
     <string name="swipeable_notification_unknown_error_title">Unknown error</string>
     <string name="swipeable_notification_unknown_error_text">No description provided</string>
+
 </resources>

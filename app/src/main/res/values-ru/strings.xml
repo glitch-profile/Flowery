@@ -2,6 +2,24 @@
 <resources>
     <string name="app_name">Flowery</string>
 
+    <!-- API RESPONSE MESSAGE CODES -->
+    <string name="api_response_code_unknown">Произошла неизвестная ошибка</string>
+    <string name="api_response_code_ok">Успешно</string>
+    <!-- RESPONSE STATUS CODES -->
+    <string name="api_response_code_unauthorized">Вы не авторизованы. Пожалуйста, войдите снова.</string>
+    <string name="api_response_code_forbidden">У Вас нет прав на доступ к этому контенту</string>
+    <string name="api_response_code_bad_request">Неверный запрос. Проверьте входные данные или обновите приложение</string>
+    <string name="api_response_code_not_found">Данные не найдены</string>
+    <string name="api_response_code_connect_timeout">Не удалось подключиться к серверу</string>
+    <string name="api_response_code_socket_connection_error">Не удалось установить соединенение</string>
+    <!-- AUTH -->
+    <string name="api_response_code_user_not_found">Пользователь не найден</string>
+    <string name="api_response_code_session_not_found">Сессия не найдена или истекла</string>
+    <string name="api_response_code_auth_data_incorrect">Пользователь с такими логином и паролем не найден</string>
+    <string name="api_response_code_phone_not_found">Пользователь с таким номером телефона не найден</string>
+    <string name="api_response_code_phone_incorrect">Номер телефона введен неверно</string>
+    <string name="api_response_code_code_incorrect">Код подтверждения неверный</string>
+
     <!-- NOTIFICATION COMPONENT -->
     <string name="swipeable_notification_unknown_error_title">Неизвестная ошибка</string>
     <string name="swipeable_notification_unknown_error_text">Описание не предоставлено</string>

@@ -12,6 +12,7 @@ class AuthUseCase @Inject constructor(
     private val apiAuthRepository: RemoteAuthRepository,
     private val localAuthRepository: LocalAuthDataRepository,
     private val localNotificationsSettings: LocalNotificationsSettingsRepository
+    // TODO: Add notifications setup
 ) {
 
     suspend fun loginByPhone(

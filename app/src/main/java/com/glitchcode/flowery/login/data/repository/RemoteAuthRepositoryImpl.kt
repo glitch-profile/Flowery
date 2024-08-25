@@ -1,6 +1,7 @@
 package com.glitchcode.flowery.login.data.repository
 
 import com.glitchcode.flowery.core.data.entity.ApiResponseDto
+import com.glitchcode.flowery.core.domain.utils.ApiResponseMessageCode
 import com.glitchcode.flowery.core.domain.utils.Resource
 import com.glitchcode.flowery.login.data.entity.AuthPasswordDataDto
 import com.glitchcode.flowery.login.data.entity.AuthPhoneDataDto
@@ -37,10 +38,13 @@ class RemoteAuthRepositoryImpl @Inject constructor(
             if (response.status) {
                 Resource.Success(data = Unit)
             } else {
-                Resource.Error(message = response.message)
+                Resource.Error(
+                    messageRes = ApiResponseMessageCode.getMessageRes(response.messageCode),
+                    message = response.message
+                )
             }
         } catch (e: Exception) {
-            Resource.Error(message = "unknown error")
+            Resource.getResourceFromException(e)
         }
     }
 
@@ -62,10 +66,13 @@ class RemoteAuthRepositoryImpl @Inject constructor(
                 val sessionInfo = responseInfo.headers[AUTH_SESSION_KEY]!!
                 Resource.Success(data = sessionInfo)
             } else {
-                Resource.Error(message = body.message)
+                Resource.Error(
+                    message = body.message,
+                    messageRes = ApiResponseMessageCode.getMessageRes(body.messageCode)
+                )
             }
         } catch (e: Exception) {
-            Resource.Error(message = "unknown error")
+            Resource.getResourceFromException(e)
         }
     }
 
@@ -84,10 +91,13 @@ class RemoteAuthRepositoryImpl @Inject constructor(
                 val sessionInfo = responseInfo.headers[AUTH_SESSION_KEY]!!
                 Resource.Success(data = sessionInfo)
             } else {
-                Resource.Error(message = body.message)
+                Resource.Error(
+                    message = body.message,
+                    messageRes = ApiResponseMessageCode.getMessageRes(body.messageCode)
+                )
             }
         } catch (e: Exception) {
-            Resource.Error(message = "unknown error")
+            Resource.getResourceFromException(e)
         }
     }
 
@@ -98,9 +108,12 @@ class RemoteAuthRepositoryImpl @Inject constructor(
             }. body()
             if (response.status) {
                 Resource.Success(data = response.data)
-            } else Resource.Error(message = response.message)
+            } else Resource.Error(
+                message = response.message,
+                messageRes = ApiResponseMessageCode.getMessageRes(response.messageCode)
+            )
         } catch (e: Exception) {
-            Resource.Error(message = "unknown error")
+            Resource.getResourceFromException(e)
         }
     }
 
@@ -112,10 +125,13 @@ class RemoteAuthRepositoryImpl @Inject constructor(
             if (response.status) {
                 Resource.Success(data = Unit)
             } else {
-                Resource.Error(message = response.message)
+                Resource.Error(
+                    message = response.message,
+                    messageRes = ApiResponseMessageCode.getMessageRes(response.messageCode)
+                )
             }
         } catch (e: Exception) {
-            Resource.Error(message = "unknown error")
+            Resource.getResourceFromException(e)
         }
     }
 
@@ -127,10 +143,13 @@ class RemoteAuthRepositoryImpl @Inject constructor(
             if (response.status) {
                 Resource.Success(data = response.data)
             } else {
-                Resource.Error(message = response.message)
+                Resource.Error(
+                    message = response.message,
+                    messageRes = ApiResponseMessageCode.getMessageRes(response.messageCode)
+                )
             }
         } catch (e: Exception) {
-            Resource.Error(message = "unknown error")
+            Resource.getResourceFromException(e)
         }
     }
 
@@ -142,10 +161,13 @@ class RemoteAuthRepositoryImpl @Inject constructor(
             if (response.status) {
                 Resource.Success(data = Unit)
             } else {
-                Resource.Error(message = response.message)
+                Resource.Error(
+                    message = response.message,
+                    messageRes = ApiResponseMessageCode.getMessageRes(response.messageCode)
+                )
             }
         } catch (e: Exception) {
-            Resource.Error(message = "unknown error")
+            Resource.getResourceFromException(e)
         }
     }
 }

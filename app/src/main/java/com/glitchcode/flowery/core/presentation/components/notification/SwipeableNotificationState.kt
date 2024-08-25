@@ -1,5 +1,6 @@
 package com.glitchcode.flowery.core.presentation.components.notification
 
+import androidx.annotation.StringRes
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,8 +19,8 @@ class SwipeableNotificationState() {
     private val scope = CoroutineScope(Dispatchers.Default + Job())
 
     fun showNotification(
-        titleRes: Int,
-        textRes: Int,
+        @StringRes titleRes: Int,
+        @StringRes textRes: Int,
         type: SwipeableNotificationType = SwipeableNotificationType.NOT_SPECIFIED
     ) {
         scope.coroutineContext.cancelChildren()

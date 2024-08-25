@@ -8,5 +8,6 @@ import kotlinx.serialization.Serializable
 data class ApiResponseDto<T>(
     val status: Boolean,
     val message: String,
+    val messageCode: String,
     val data: T
 )
