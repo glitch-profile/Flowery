@@ -19,13 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
@@ -139,13 +134,17 @@ fun FloweryLoginTextField(
     value: String,
     onValueChanges: (String) -> Unit,
     labelText: String,
+    placeholderText: String? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
+    prefix: @Composable (() -> Unit)? = null,
+    suffix: @Composable (() -> Unit)? = null,
     charactersLimit: Int = 20,
     enabled: Boolean = true,
     readOnly: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardActions: KeyboardActions = KeyboardActions(),
-    keyboardOptions: KeyboardOptions = KeyboardOptions()
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
     TextField(
         modifier = modifier,
@@ -158,8 +157,16 @@ fun FloweryLoginTextField(
         label = {
             Text(text = labelText)
         },
+        placeholder = if (placeholderText != null) {
+            {
+                Text(text = placeholderText)
+            }
+        } else null,
         shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+        leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
+        prefix = prefix,
+        suffix = suffix,
         singleLine = true,
         colors = TextFieldDefaults.colors(
             unfocusedContainerColor = Color.Transparent,

@@ -29,11 +29,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.glitchcode.flowery.R
+import com.glitchcode.flowery.core.domain.utils.MaskVisualTransformation
 import com.glitchcode.flowery.core.presentation.components.FloweryButton
 import com.glitchcode.flowery.core.presentation.components.FloweryLoginTextField
 import com.glitchcode.flowery.core.presentation.components.FloweryTextButton
 import com.glitchcode.flowery.core.presentation.components.FloweryTextButtonCompact
-import com.glitchcode.flowery.core.presentation.components.FloweryTextField
 
 @Composable
 fun LoginScreen(
@@ -61,6 +61,11 @@ fun LoginScreen(
                     
                 }, 
                 labelText = stringResource(id = R.string.login_screen_phone_number_label),
+                placeholderText = "(___) ___-__-__",
+                visualTransformation = MaskVisualTransformation("(###) ###-##-##"),
+                prefix = {
+                    Text(text = "+7 ")
+                }
             )
             Spacer(modifier = Modifier.height(16.dp))
             FloweryButton(
