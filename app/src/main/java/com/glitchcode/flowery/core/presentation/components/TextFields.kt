@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,20 +45,20 @@ fun FloweryTextField(
     minLines: Int = 1,
     maxLines: Int = Int.MAX_VALUE,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    keyboardActions: KeyboardActions = KeyboardActions(),
-    keyboardOptions: KeyboardOptions = KeyboardOptions(),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     contentPadding: PaddingValues = PaddingValues(horizontal = 16.dp, vertical = 16.dp)
 ) {
     val placeHolderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
 
-    var isFocused by remember {
-        mutableStateOf(false)
-    }
+//    var isFocused by remember {
+//        mutableStateOf(false)
+//    }
     BasicTextField(
-        modifier = modifier
-            .onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            },
+//        modifier = modifier
+//            .onFocusChanged { focusState ->
+//                isFocused = focusState.isFocused
+//            },
         value = value,
         onValueChange = { newValue ->
             if (charactersLimit != null) {
@@ -126,5 +130,43 @@ fun FloweryTextField(
                 }
             }
         }
+    )
+}
+
+@Composable
+fun FloweryLoginTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChanges: (String) -> Unit,
+    labelText: String,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    charactersLimit: Int = 20,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardActions: KeyboardActions = KeyboardActions(),
+    keyboardOptions: KeyboardOptions = KeyboardOptions()
+) {
+    TextField(
+        modifier = modifier,
+        value = value,
+        onValueChange = { newText ->
+            if (newText.length <= charactersLimit) onValueChanges.invoke(newText)
+        },
+        enabled = enabled,
+        readOnly = readOnly,
+        label = {
+            Text(text = labelText)
+        },
+        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+        trailingIcon = trailingIcon,
+        singleLine = true,
+        colors = TextFieldDefaults.colors(
+            unfocusedContainerColor = Color.Transparent,
+            focusedContainerColor = Color.Transparent
+        ),
+        visualTransformation = visualTransformation,
+        keyboardActions = keyboardActions,
+        keyboardOptions = keyboardOptions
     )
 }

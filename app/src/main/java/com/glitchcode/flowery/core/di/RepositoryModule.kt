@@ -6,6 +6,8 @@ import com.glitchcode.flowery.core.data.repositoryimpl.LocalNotificationsSetting
 import com.glitchcode.flowery.core.domain.repository.LocalAppearanceSettingsRepository
 import com.glitchcode.flowery.core.domain.repository.LocalAuthDataRepository
 import com.glitchcode.flowery.core.domain.repository.LocalNotificationsSettingsRepository
+import com.glitchcode.flowery.login.data.repository.RemoteAuthRepositoryImpl
+import com.glitchcode.flowery.login.domain.repository.RemoteAuthRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,5 +35,11 @@ abstract class RepositoryModule {
     abstract fun bindsNotificationsSettingsRepository(
         localNotificationsSettingsRepositoryImpl: LocalNotificationsSettingsRepositoryImpl
     ): LocalNotificationsSettingsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindsRemoteAuthRepository(
+        remoteAuthRepositoryImpl: RemoteAuthRepositoryImpl
+    ): RemoteAuthRepository
 
 }

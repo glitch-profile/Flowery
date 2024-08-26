@@ -2,6 +2,7 @@ package com.glitchcode.flowery.core.presentation.components
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
@@ -97,7 +98,8 @@ fun FloweryTextButtonCompact(
     content: @Composable RowScope.() -> Unit
 ) {
     TextButton(
-        modifier = modifier,
+        modifier = modifier
+            .height(24.dp),
         onClick = onClick,
         shape = MaterialTheme.shapes.small,
         enabled = isEnabled,

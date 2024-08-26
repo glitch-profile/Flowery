@@ -20,6 +20,29 @@
     <string name="api_response_code_phone_incorrect">Номер телефона введен неверно</string>
     <string name="api_response_code_code_incorrect">Код подтверждения неверный</string>
 
+    <!-- LOGIN SCREEN -->
+    <string name="login_screen_welcome_text">С возвращением!</string>
+    <string name="login_screen_no_account_yet_text">Ещё нет аккаунта?</string>
+    <string name="login_screen_phone_number_label">Номер телефона</string>
+    <string name="login_screen_phone_number_placeholder">Введите номер телефона…</string>
+    <string name="login_screen_login_label">Логин</string>
+    <string name="login_screen_login_placeholder">Введите логин…</string>
+    <string name="login_screen_password_label">Пароль</string>
+    <string name="login_screen_password_placeholder">Введите пароль…</string>
+    <string name="login_screen_login_button_text">Войти</string>
+    <string name="login_screen_login_phone_button_text">Войти по номеру телефона</string>
+    <string name="login_screen_login_password_button_text">Войти при помощи пароля</string>
+    <string name="login_screen_register_button_text">Создать</string>
+
+
+
+    <!-- REUSABLE -->
+    <string name="reusable_text_loading">Загрузка…</string>
+    <string name="reusable_text_confirm">Подтвердить</string>
+    <string name="reusable_text_save">Сохранить</string>
+    <string name="reusable_text_cancel">Отменить</string>
+    <string name="reusable_text_or">или</string>
+
     <!-- NOTIFICATION COMPONENT -->
     <string name="swipeable_notification_unknown_error_title">Неизвестная ошибка</string>
     <string name="swipeable_notification_unknown_error_text">Описание не предоставлено</string>

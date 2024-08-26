@@ -19,6 +19,29 @@
     <string name="api_response_code_phone_incorrect">Phone number entered incorrectly</string>
     <string name="api_response_code_code_incorrect">This confirmation code is incorrect</string>
 
+    <!-- LOGIN SCREEN -->
+    <string name="login_screen_welcome_text">Welcome back!</string>
+    <string name="login_screen_no_account_yet_text">Don\'t have an account?</string>
+    <string name="login_screen_phone_number_label">Phone number</string>
+    <string name="login_screen_phone_number_placeholder">Enter your phone number…</string>
+    <string name="login_screen_login_label">Login</string>
+    <string name="login_screen_login_placeholder">Enter your login…</string>
+    <string name="login_screen_password_label">Password</string>
+    <string name="login_screen_password_placeholder">Enter your password…</string>
+    <string name="login_screen_login_button_text">Login</string>
+    <string name="login_screen_login_phone_button_text">Login using phone number</string>
+    <string name="login_screen_login_password_button_text">Login using password</string>
+    <string name="login_screen_register_button_text">Register</string>
+
+
+
+    <!-- REUSABLE -->
+    <string name="reusable_text_loading">Loading…</string>
+    <string name="reusable_text_confirm">Confirm</string>
+    <string name="reusable_text_save">Save</string>
+    <string name="reusable_text_cancel">Cancel</string>
+    <string name="reusable_text_or">or</string>
+
     <!-- NOTIFICATION COMPONENT -->
     <string name="swipeable_notification_unknown_error_title">Unknown error</string>
     <string name="swipeable_notification_unknown_error_text">No description provided</string>
