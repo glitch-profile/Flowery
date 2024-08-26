@@ -1,5 +1,6 @@
 package com.glitchcode.flowery.login.domain.usecases
 
+import com.glitchcode.flowery.R
 import com.glitchcode.flowery.core.domain.repository.LocalAuthDataRepository
 import com.glitchcode.flowery.core.domain.repository.LocalNotificationsSettingsRepository
 import com.glitchcode.flowery.core.domain.utils.EmployeeRoles
@@ -19,7 +20,10 @@ class AuthUseCase @Inject constructor(
         phoneNumber: String
     ): Resource<Unit> {
         if (!Regex("^\\+7\\d{10}\$").matches(phoneNumber)) {
-            return Resource.Error(message = "incorrect phone number")
+            return Resource.Error(
+                message = "incorrect phone number",
+                messageRes = R.string.api_response_code_phone_incorrect
+            )
         }
         val result = apiAuthRepository.loginByPhone(phoneNumber)
         return result
@@ -55,7 +59,10 @@ class AuthUseCase @Inject constructor(
 
     suspend fun registerSession(): Resource<AuthResponseDto> {
         val sessionId = localAuthRepository.getUserSessionId() ?: kotlin.run {
-            return Resource.Error(message = "session not found.")
+            return Resource.Error(
+                message = "session not found.",
+                messageRes = R.string.api_response_code_session_not_found
+            )
         }
         val result = apiAuthRepository.registerSession(sessionId)
         if (result is Resource.Success) {
@@ -70,7 +77,10 @@ class AuthUseCase @Inject constructor(
 
     suspend fun updateAuthInfo(): Resource<AuthResponseDto> {
         val sessionId = localAuthRepository.getUserSessionId() ?: kotlin.run {
-            return Resource.Error(message = "session not found.")
+            return Resource.Error(
+                message = "session not found.",
+                messageRes = R.string.api_response_code_session_not_found
+            )
         }
         val result = apiAuthRepository.updateAuthInfo(sessionId)
         if (result is Resource.Success) {
@@ -90,7 +100,10 @@ class AuthUseCase @Inject constructor(
 
     suspend fun logout(): Resource<Unit> {
         val sessionId = localAuthRepository.getUserSessionId() ?: kotlin.run {
-            return Resource.Error(message = "session not found.")
+            return Resource.Error(
+                message = "session not found.",
+                messageRes = R.string.api_response_code_session_not_found
+            )
         }
         val result = apiAuthRepository.logout(sessionId)
         if (result is Resource.Success) {
