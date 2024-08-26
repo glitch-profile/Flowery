@@ -46,14 +46,8 @@ fun FloweryTextField(
 ) {
     val placeHolderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
 
-//    var isFocused by remember {
-//        mutableStateOf(false)
-//    }
     BasicTextField(
-//        modifier = modifier
-//            .onFocusChanged { focusState ->
-//                isFocused = focusState.isFocused
-//            },
+        modifier = modifier,
         value = value,
         onValueChange = { newValue ->
             if (charactersLimit != null) {

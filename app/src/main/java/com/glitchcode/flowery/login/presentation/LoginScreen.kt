@@ -48,71 +48,82 @@ fun LoginScreen(
     ) {
         TopSection()
         Spacer(modifier = Modifier.weight(1f))
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 30.dp)
-        ) {
-            FloweryLoginTextField(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                value = "",
-                onValueChanges = {
-                    
-                }, 
-                labelText = stringResource(id = R.string.login_screen_phone_number_label),
-                placeholderText = "(___) ___-__-__",
-                visualTransformation = MaskVisualTransformation("(###) ###-##-##"),
-                prefix = {
-                    Text(text = "+7 ")
-                }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            FloweryButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = stringResource(id = R.string.login_screen_login_button_text))
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            LoginTypesDivider(
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            FloweryTextButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = stringResource(id = R.string.login_screen_login_password_button_text))
-            }
-        }
+        AuthForm()
         Spacer(modifier = Modifier.height(48.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(id = R.string.login_screen_no_account_yet_text),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            FloweryTextButtonCompact(
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = stringResource(id = R.string.login_screen_register_button_text))
-            }
-        }
+        CreateAccountSection()
     }
 
 //    SwipeableNotification(notificationState = notificationState)
+}
+
+@Composable
+private fun CreateAccountSection() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = stringResource(id = R.string.login_screen_no_account_yet_text),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        FloweryTextButtonCompact(
+            onClick = { /*TODO*/ }
+        ) {
+            Text(text = stringResource(id = R.string.login_screen_register_button_text))
+        }
+    }
+}
+
+@Composable
+private fun AuthForm() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 30.dp)
+    ) {
+        FloweryLoginTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = "",
+            onValueChanges = {
+
+            },
+            labelText = stringResource(id = R.string.login_screen_phone_number_label),
+            placeholderText = "(___) ___-__-__",
+            charactersLimit = 10,
+            visualTransformation = MaskVisualTransformation("(###) ###-##-##"),
+            prefix = {
+                Text(text = "+7 ")
+            }
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        FloweryButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            onClick = { /*TODO*/ }
+        ) {
+            Text(text = stringResource(id = R.string.login_screen_login_button_text))
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+        LoginTypesDivider(
+            modifier = Modifier
+                .fillMaxWidth()
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        FloweryTextButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            onClick = { /*TODO*/ }
+        ) {
+            Text(text = stringResource(id = R.string.login_screen_login_password_button_text))
+        }
+    }
 }
 
 @Composable
