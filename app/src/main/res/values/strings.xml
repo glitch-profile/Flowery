@@ -22,6 +22,7 @@
     <!-- LOGIN SCREEN -->
     <string name="login_screen_welcome_text">Welcome back!</string>
     <string name="login_screen_no_account_yet_text">Don\'t have an account?</string>
+    <string name="login_screen_error_notification_title_text">Unable to log in…</string>
     <string name="login_screen_phone_number_label">Phone number</string>
     <string name="login_screen_phone_number_placeholder">Enter your phone number…</string>
     <string name="login_screen_login_label">Login</string>

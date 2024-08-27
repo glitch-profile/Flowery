@@ -33,6 +33,12 @@ class AuthUseCase @Inject constructor(
         phoneNumber: String,
         verificationCode: String
     ): Resource<String> {
+        if (!Regex("^\\+7\\d{10}\$").matches(phoneNumber)) {
+            return Resource.Error(
+                message = "incorrect phone number",
+                messageRes = R.string.api_response_code_phone_incorrect
+            )
+        }
         val result = apiAuthRepository.confirmPhoneNumber(
             phoneNumber = phoneNumber,
             verificationCode = verificationCode
@@ -52,6 +58,7 @@ class AuthUseCase @Inject constructor(
             password = password
         )
         if (result is Resource.Success) {
+            localAuthRepository.setSavedEmployeeLogin(login)
             localAuthRepository.setUserSessionId(result.data!!)
         }
         return result
