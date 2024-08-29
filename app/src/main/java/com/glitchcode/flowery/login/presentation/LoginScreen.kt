@@ -1,6 +1,8 @@
 package com.glitchcode.flowery.login.presentation
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -49,6 +51,7 @@ fun LoginScreen(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val notificationState = viewModel.notificationState
+    val loginState = viewModel.loginState.collectAsState()
     
     Column(
         modifier = Modifier
@@ -58,15 +61,23 @@ fun LoginScreen(
         TopSection()
         Spacer(modifier = Modifier.weight(1f))
         AuthForm(viewModel)
-        Spacer(modifier = Modifier.height(48.dp))
-        CreateAccountSection()
+        AnimatedVisibility(visible = loginState.value.loginType != LoginType.NEW_ACCOUNT) {
+            Column {
+                Spacer(modifier = Modifier.height(48.dp))
+                CreateAccountSection(
+                    onCreateNewAccount = { viewModel.updateLoginType(LoginType.NEW_ACCOUNT) }
+                )
+            }
+        }
     }
 
     SwipeableNotification(notificationState = notificationState)
 }
 
 @Composable
-private fun CreateAccountSection() {
+private fun CreateAccountSection(
+    onCreateNewAccount: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -80,7 +91,7 @@ private fun CreateAccountSection() {
         )
         Spacer(modifier = Modifier.width(4.dp))
         FloweryTextButtonCompact(
-            onClick = { /*TODO*/ }
+            onClick = { onCreateNewAccount.invoke() }
         ) {
             Text(text = stringResource(id = R.string.login_screen_register_button_text))
         }
@@ -106,11 +117,11 @@ private fun AuthForm(
             transitionSpec = {
                 slideInHorizontally(
                     animationSpec = spring(
-                        stiffness = 1000f
+                        stiffness = Spring.StiffnessMediumLow
                     )
                 ) { it } togetherWith slideOutHorizontally(
                     animationSpec = spring(
-                        stiffness = 1000f
+                        stiffness = Spring.StiffnessMediumLow
                     )
                 ) { -it }
             }
@@ -132,7 +143,16 @@ private fun AuthForm(
                         onPasswordChanges = { viewModel.updatePasswordText(it) }
                     )
                 }
-                LoginType.NEW_ACCOUNT -> TODO()
+                LoginType.NEW_ACCOUNT -> {
+                    AuthNewAccountFields(
+                        name = "",
+                        lastName = "",
+                        phoneNumber = "",
+                        onNameChanges = {},
+                        onLastNameChanges = {},
+                        onPhoneChanges = {}
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
@@ -140,14 +160,41 @@ private fun AuthForm(
             modifier = Modifier
                 .padding(horizontal = 30.dp)
         ) {
-            FloweryButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp),
-                onClick = { /*TODO*/ }
-            ) {
-                Text(text = stringResource(id = R.string.login_screen_login_button_text))
+            AnimatedContent(
+                targetState = loginState.value.loginType == LoginType.NEW_ACCOUNT,
+                transitionSpec = {
+                    fadeIn(
+                        animationSpec = spring(
+                            stiffness = Spring.StiffnessMediumLow
+                        )
+                    ) togetherWith fadeOut(
+                        animationSpec = spring(
+                            stiffness = Spring.StiffnessMediumLow
+                        )
+                    )
+                }
+            ) { isNewAccountMode ->
+                if (isNewAccountMode) {
+                    FloweryButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Text(text = stringResource(id = R.string.login_screen_create_account_button_text))
+                    }
+                } else {
+                    FloweryButton(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        onClick = { /*TODO*/ }
+                    ) {
+                        Text(text = stringResource(id = R.string.login_screen_login_button_text))
+                    }
+                }
             }
+
             Spacer(modifier = Modifier.height(16.dp))
             LoginTypesDivider(
                 modifier = Modifier
@@ -159,11 +206,11 @@ private fun AuthForm(
                 transitionSpec = {
                     fadeIn(
                         animationSpec = spring(
-                            stiffness = 1000f
+                            stiffness = Spring.StiffnessMediumLow
                         )
                     ) togetherWith fadeOut(
                         animationSpec = spring(
-                            stiffness = 1000f
+                            stiffness = Spring.StiffnessMediumLow
                         )
                     )
                 }
@@ -189,7 +236,16 @@ private fun AuthForm(
                             Text(text = stringResource(id = R.string.login_screen_login_phone_button_text))
                         }
                     }
-                    LoginType.NEW_ACCOUNT -> TODO()
+                    LoginType.NEW_ACCOUNT -> {
+                        FloweryTextButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            onClick = { viewModel.updateLoginType(LoginType.PHONE) }
+                        ) {
+                            Text(text = stringResource(id = R.string.reusable_text_cancel))
+                        }
+                    }
                 }
             }
         }
@@ -254,7 +310,55 @@ private fun AuthByPasswordFields(
             }
         )
     }
+}
 
+@Composable
+private fun AuthNewAccountFields(
+    name: String,
+    lastName: String,
+    phoneNumber: String,
+    onNameChanges: (String) -> Unit,
+    onLastNameChanges: (String) -> Unit,
+    onPhoneChanges: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 30.dp)
+    ) {
+        FloweryFilledTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = name,
+            onValueChange = { onNameChanges.invoke(it) },
+            label = {
+                Text(text = "Your name")
+            }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        FloweryFilledTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = lastName,
+            onValueChange = { onLastNameChanges.invoke(it) },
+            label = {
+                Text(text = "Your Lastname")
+            }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        FloweryFilledTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            value = phoneNumber,
+            onValueChange = { onPhoneChanges.invoke(it) },
+            label = {
+                Text(text = stringResource(id = R.string.login_screen_phone_number_label))
+            },
+            prefix = {
+                Text(text = "+7 ")
+            },
+            visualTransformation = MaskVisualTransformation("(###) ###-##-##")
+        )
+    }
 }
 
 @Composable

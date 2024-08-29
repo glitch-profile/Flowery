@@ -31,6 +31,7 @@
     <string name="login_screen_password_label">Пароль</string>
     <string name="login_screen_password_placeholder">Введите пароль…</string>
     <string name="login_screen_login_button_text">Войти</string>
+    <string name="login_screen_create_account_button_text">Создать аккаунт</string>
     <string name="login_screen_login_phone_button_text">Войти по номеру телефона</string>
     <string name="login_screen_login_password_button_text">Войти при помощи пароля</string>
     <string name="login_screen_register_button_text">Создать</string>
