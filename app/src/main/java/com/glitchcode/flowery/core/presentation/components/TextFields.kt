@@ -1,38 +1,52 @@
 package com.glitchcode.flowery.core.presentation.components
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun FloweryTextField(
+fun FlowerySolidTextField(
     modifier: Modifier = Modifier,
     value: String,
-    onValueChanges: (String) -> Unit,
-    titleText: String,
-    labelText: String,
+    onValueChange: (String) -> Unit,
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
     charactersLimit: Int? = null,
     enabled: Boolean = true,
     readOnly: Boolean = false,
@@ -51,8 +65,8 @@ fun FloweryTextField(
         value = value,
         onValueChange = { newValue ->
             if (charactersLimit != null) {
-                onValueChanges.invoke(newValue.take(charactersLimit))
-            } else onValueChanges.invoke(newValue)
+                onValueChange.invoke(newValue.take(charactersLimit))
+            } else onValueChange.invoke(newValue)
         },
         singleLine = singleLine,
         minLines = minLines,
@@ -69,28 +83,28 @@ fun FloweryTextField(
                     .background(MaterialTheme.colorScheme.surfaceVariant)
                     .padding(contentPadding),
             ) {
-                Text(
-                    text = titleText,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(8.dp))
+                if (label != null) {
+                    CompositionLocalProvider(
+                        LocalTextStyle provides MaterialTheme.typography.titleMedium,
+                        LocalContentColor provides MaterialTheme.colorScheme.primary
+                    ) {
+                        label.invoke()
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Box(
                         modifier = modifier.weight(1f)
                     ) {
-                        if (value.isEmpty()) {
-                            Text(
-                                text = labelText,
-                                style = MaterialTheme.typography.bodyLarge,
-                                color = placeHolderColor,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                        if (placeholder!= null && value.isEmpty()) {
+                            CompositionLocalProvider(
+                                LocalTextStyle provides MaterialTheme.typography.bodyLarge,
+                                LocalContentColor provides placeHolderColor
+                            ) {
+                                placeholder.invoke()
+                            }
                         }
                         innerTextField.invoke()
                     }
@@ -100,7 +114,6 @@ fun FloweryTextField(
                             else placeHolderColor,
                             label = "remainingCharactersCountColorChange"
                         )
-                        
                         Box(
                             modifier = Modifier
                                 .width(40.dp)
@@ -123,17 +136,135 @@ fun FloweryTextField(
 }
 
 @Composable
-fun FloweryLoginTextField(
+fun FloweryIndicatorTextField(
     modifier: Modifier = Modifier,
     value: String,
-    onValueChanges: (String) -> Unit,
+    onValueChange: (String) -> Unit,
     labelText: String,
     placeholderText: String? = null,
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     prefix: @Composable (() -> Unit)? = null,
     suffix: @Composable (() -> Unit)? = null,
-    charactersLimit: Int = 20,
+    minLines: Int = 1,
+    maxLines: Int = Int.MAX_VALUE,
+    singleLine: Boolean = false,
+    enabled: Boolean = true,
+    readOnly: Boolean = false,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default
+) {
+    var isFocused by remember {
+        mutableStateOf(false)
+    }
+    val indicatorColor = animateColorAsState(
+        targetValue = if (isFocused) MaterialTheme.colorScheme.primary
+        else MaterialTheme.colorScheme.onSurfaceVariant
+    )
+    val indicatorHeight = animateDpAsState(
+        targetValue = if (isFocused) 3.dp else 1.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMedium)
+    )
+    BasicTextField(
+        modifier = modifier
+            .onFocusChanged {
+                isFocused = it.hasFocus
+            },
+        value = value,
+        onValueChange = onValueChange,
+        textStyle = MaterialTheme.typography.bodyLarge.copy(color = MaterialTheme.colorScheme.onSurface),
+        singleLine = singleLine,
+        minLines = minLines,
+        maxLines = maxLines,
+        enabled = enabled,
+        readOnly = readOnly,
+        visualTransformation = visualTransformation,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = keyboardActions,
+        decorationBox = { innerTextField ->
+            Column(
+                modifier = Modifier
+                    .width(IntrinsicSize.Min)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onSurfaceVariant) {
+                        if (leadingIcon != null) {
+                            leadingIcon.invoke()
+                            Spacer(modifier = Modifier.width(16.dp))
+                        }
+                        if (prefix != null) {
+                            ProvideTextStyle(
+                                value = MaterialTheme.typography.bodyLarge
+                            ) {
+                                prefix.invoke()
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                        ) {
+                            if (placeholderText != null && value.isEmpty()) {
+                                Text(
+                                    text = labelText,
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    minLines = if (singleLine) 1 else minLines,
+                                    maxLines = if (singleLine) 1 else maxLines,
+                                    overflow = TextOverflow.Ellipsis
+
+                                )
+                            }
+                            innerTextField.invoke()
+                        }
+                        if (suffix != null) {
+                            ProvideTextStyle(
+                                value = MaterialTheme.typography.bodyLarge
+                            ) {
+                                suffix.invoke()
+                            }
+                        }
+                        if (trailingIcon != null) {
+                            Spacer(modifier = Modifier.width(16.dp))
+                            trailingIcon.invoke()
+                        }
+                    }
+                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(3.dp)
+                    .background(color = Color.Transparent)
+                ) {
+                    Box(modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .fillMaxWidth()
+                        .height(indicatorHeight.value)
+                        .background(color = indicatorColor.value)
+                    )
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun FloweryFilledTextField(
+    modifier: Modifier = Modifier,
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
+    leadingIcon: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    prefix: @Composable (() -> Unit)? = null,
+    suffix: @Composable (() -> Unit)? = null,
+    minLines: Int = 1,
+    maxLines: Int = Int.MAX_VALUE,
+    singleLine: Boolean = false,
     enabled: Boolean = true,
     readOnly: Boolean = false,
     visualTransformation: VisualTransformation = VisualTransformation.None,
@@ -143,31 +274,25 @@ fun FloweryLoginTextField(
     TextField(
         modifier = modifier,
         value = value,
-        onValueChange = { newText ->
-            if (newText.length <= charactersLimit) onValueChanges.invoke(newText)
-        },
-        enabled = enabled,
-        readOnly = readOnly,
-        label = {
-            Text(text = labelText)
-        },
-        placeholder = if (placeholderText != null) {
-            {
-                Text(text = placeholderText)
-            }
-        } else null,
-        shape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+        onValueChange = onValueChange,
+        label = label,
+        placeholder = placeholder,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         prefix = prefix,
         suffix = suffix,
-        singleLine = true,
-        colors = TextFieldDefaults.colors(
-            unfocusedContainerColor = Color.Transparent,
-            focusedContainerColor = Color.Transparent
-        ),
+        minLines = minLines,
+        maxLines = maxLines,
+        singleLine = singleLine,
+        enabled = enabled,
+        readOnly = readOnly,
         visualTransformation = visualTransformation,
         keyboardActions = keyboardActions,
-        keyboardOptions = keyboardOptions
+        keyboardOptions = keyboardOptions,
+        shape = MaterialTheme.shapes.small.copy(bottomEnd = CornerSize(0.dp), bottomStart = CornerSize(0.dp)),
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0f)
+        )
     )
 }
