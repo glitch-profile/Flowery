@@ -24,11 +24,12 @@
     <string name="login_screen_no_account_yet_text">Don\'t have an account?</string>
     <string name="login_screen_error_notification_title_text">Unable to log in…</string>
     <string name="login_screen_phone_number_label">Phone number</string>
-    <string name="login_screen_phone_number_placeholder">Enter your phone number…</string>
+    <string name="login_screen_verification_code_label">Verification code</string>
     <string name="login_screen_login_label">Login</string>
-    <string name="login_screen_login_placeholder">Enter your login…</string>
     <string name="login_screen_password_label">Password</string>
-    <string name="login_screen_password_placeholder">Enter your password…</string>
+    <string name="login_screen_firstname_label">First name</string>
+    <string name="login_screen_lastname_label">Last name</string>
+    <string name="login_screen_send_code_button_text">Send code</string>
     <string name="login_screen_login_button_text">Login</string>
     <string name="login_screen_create_account_button_text">Create account</string>
     <string name="login_screen_login_phone_button_text">Login using phone number</string>

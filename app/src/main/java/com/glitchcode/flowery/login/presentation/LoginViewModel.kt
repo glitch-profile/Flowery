@@ -58,7 +58,7 @@ class LoginViewModel @Inject constructor(
             it.copy(loginType = loginType)
         }
     }
-    fun updateIsNeedVerificationCode(status: Boolean) {
+    fun updateIsRequestingCode(status: Boolean) {
         _loginState.update {
             it.copy(isRequiredVerificationCode = status)
         }
@@ -75,7 +75,8 @@ class LoginViewModel @Inject constructor(
 
     fun requestVerificationCode() {
         viewModelScope.launch {
-            val loginResult = authUseCase.loginByPhone(phoneNumber.value)
+            val phone = "+7" + phoneNumber.value
+            val loginResult = authUseCase.loginByPhone(phone)
             if (loginResult is Resource.Success) {
                 _loginState.update { it.copy(isRequiredVerificationCode = true) }
             } else {

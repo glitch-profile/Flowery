@@ -29,6 +29,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -57,6 +62,7 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .navigationBarsPadding()
+            .padding(bottom = 8.dp)
     ) {
         TopSection()
         Spacer(modifier = Modifier.weight(1f))
@@ -131,8 +137,10 @@ private fun AuthForm(
                     AuthByPhoneFields(
                         phoneNumber = phoneNumber.value,
                         verificationCode = verificationCode.value,
+                        isRequestingCode = loginState.value.isRequiredVerificationCode,
                         onPhoneChanges = { viewModel.updatePhoneNumberText(it) },
-                        onVerificationCodeChanges = { viewModel.updateVerificationCodeText(it) }
+                        onVerificationCodeChanges = { viewModel.updateVerificationCodeText(it) },
+                        onRequestCodeClicked = { viewModel.requestVerificationCode() }
                     )
                 }
                 LoginType.PASSWORD -> {
@@ -148,10 +156,14 @@ private fun AuthForm(
                         name = "",
                         lastName = "",
                         phoneNumber = "",
+                        isRequestingCode = false,
+                        verificationCode = "",
                         onNameChanges = {},
                         onLastNameChanges = {},
-                        onPhoneChanges = {}
-                    )
+                        onPhoneChanges = {},
+                        onVerificationCodeChanges = {},
+                        onRequestCodeClicked = {}
+                    ) //TODO: Add info from viewModel
                 }
             }
         }
@@ -161,7 +173,7 @@ private fun AuthForm(
                 .padding(horizontal = 30.dp)
         ) {
             AnimatedContent(
-                targetState = loginState.value.loginType == LoginType.NEW_ACCOUNT,
+                targetState = loginState.value.loginType,
                 transitionSpec = {
                     fadeIn(
                         animationSpec = spring(
@@ -173,24 +185,39 @@ private fun AuthForm(
                         )
                     )
                 }
-            ) { isNewAccountMode ->
-                if (isNewAccountMode) {
-                    FloweryButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Text(text = stringResource(id = R.string.login_screen_create_account_button_text))
+            ) { loginType ->
+                when (loginType) {
+                    LoginType.PHONE -> {
+                        FloweryButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            onClick = { /*TODO*/ },
+                            enabled = phoneNumber.value.isNotEmpty() && verificationCode.value.isNotEmpty()
+                        ) {
+                            Text(text = stringResource(id = R.string.login_screen_login_button_text))
+                        }
                     }
-                } else {
-                    FloweryButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        onClick = { /*TODO*/ }
-                    ) {
-                        Text(text = stringResource(id = R.string.login_screen_login_button_text))
+                    LoginType.PASSWORD -> {
+                        FloweryButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            onClick = { /*TODO*/ },
+                            login.value.isNotEmpty() && password.value.isNotEmpty()
+                        ) {
+                            Text(text = stringResource(id = R.string.login_screen_login_button_text))
+                        }
+                    }
+                    LoginType.NEW_ACCOUNT -> {
+                        FloweryButton(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(48.dp),
+                            onClick = { /*TODO*/ }
+                        ) {
+                            Text(text = stringResource(id = R.string.login_screen_create_account_button_text))
+                        }
                     }
                 }
             }
@@ -255,9 +282,11 @@ private fun AuthForm(
 @Composable
 private fun AuthByPhoneFields(
     phoneNumber: String,
+    isRequestingCode: Boolean,
     verificationCode: String,
     onPhoneChanges: (String) -> Unit,
-    onVerificationCodeChanges: (String) -> Unit
+    onVerificationCodeChanges: (String) -> Unit,
+    onRequestCodeClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -274,8 +303,35 @@ private fun AuthByPhoneFields(
             prefix = {
                 Text(text = "+7 ")
             },
+            trailingIcon = {
+                Row {
+                    FloweryTextButton(
+                        onClick = { onRequestCodeClicked.invoke() }
+                    ) {
+                        Text(text = stringResource(id = R.string.login_screen_send_code_button_text))
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                }
+            },
             visualTransformation = MaskVisualTransformation("(###) ###-##-##")
         )
+        AnimatedVisibility(visible = isRequestingCode) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+                FloweryFilledTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = verificationCode,
+                    onValueChange = { onVerificationCodeChanges.invoke(it) },
+                    label = {
+                        Text(text = stringResource(id = R.string.login_screen_verification_code_label))
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -317,9 +373,13 @@ private fun AuthNewAccountFields(
     name: String,
     lastName: String,
     phoneNumber: String,
+    isRequestingCode: Boolean,
+    verificationCode: String,
     onNameChanges: (String) -> Unit,
     onLastNameChanges: (String) -> Unit,
-    onPhoneChanges: (String) -> Unit
+    onPhoneChanges: (String) -> Unit,
+    onVerificationCodeChanges: (String) -> Unit,
+    onRequestCodeClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -331,7 +391,7 @@ private fun AuthNewAccountFields(
             value = name,
             onValueChange = { onNameChanges.invoke(it) },
             label = {
-                Text(text = "Your name")
+                Text(text = stringResource(id = R.string.login_screen_firstname_label))
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -341,7 +401,7 @@ private fun AuthNewAccountFields(
             value = lastName,
             onValueChange = { onLastNameChanges.invoke(it) },
             label = {
-                Text(text = "Your Lastname")
+                Text(text = stringResource(id = R.string.login_screen_lastname_label))
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -356,8 +416,35 @@ private fun AuthNewAccountFields(
             prefix = {
                 Text(text = "+7 ")
             },
-            visualTransformation = MaskVisualTransformation("(###) ###-##-##")
+            visualTransformation = MaskVisualTransformation("(###) ###-##-##"),
+            trailingIcon = {
+                Row {
+                    FloweryTextButton(
+                        onClick = {  }
+                    ) {
+                        Text(text = stringResource(id = R.string.login_screen_send_code_button_text))
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                }
+            }
         )
+        AnimatedVisibility(visible = isRequestingCode) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
+                FloweryFilledTextField(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    value = verificationCode,
+                    onValueChange = { onVerificationCodeChanges.invoke(it) },
+                    label = {
+                        Text(text = stringResource(id = R.string.login_screen_verification_code_label))
+                    }
+                )
+            }
+        }
     }
 }
 

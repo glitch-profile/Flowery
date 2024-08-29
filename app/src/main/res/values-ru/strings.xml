@@ -25,11 +25,12 @@
     <string name="login_screen_no_account_yet_text">Ещё нет аккаунта?</string>
     <string name="login_screen_error_notification_title_text">Не удалось войти в аккаунт…</string>
     <string name="login_screen_phone_number_label">Номер телефона</string>
-    <string name="login_screen_phone_number_placeholder">Введите номер телефона…</string>
+    <string name="login_screen_verification_code_label">Проверочный код</string>
     <string name="login_screen_login_label">Логин</string>
-    <string name="login_screen_login_placeholder">Введите логин…</string>
     <string name="login_screen_password_label">Пароль</string>
-    <string name="login_screen_password_placeholder">Введите пароль…</string>
+    <string name="login_screen_firstname_label">Имя</string>
+    <string name="login_screen_lastname_label">Фамилия</string>
+    <string name="login_screen_send_code_button_text">Получить код</string>
     <string name="login_screen_login_button_text">Войти</string>
     <string name="login_screen_create_account_button_text">Создать аккаунт</string>
     <string name="login_screen_login_phone_button_text">Войти по номеру телефона</string>
