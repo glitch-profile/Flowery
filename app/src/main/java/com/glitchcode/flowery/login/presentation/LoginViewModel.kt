@@ -32,7 +32,7 @@ class LoginViewModel @Inject constructor(
     private val _userPassword = MutableStateFlow("")
     val userPassword = _userPassword.asStateFlow()
 
-    private val notificationState = SwipeableNotificationState()
+    val notificationState = SwipeableNotificationState()
 
     init {
         val savedLogin = localAuthDataRepository.getSavedEmployeeLogin() ?: ""
@@ -52,6 +52,16 @@ class LoginViewModel @Inject constructor(
     }
     fun updatePasswordText(password: String) {
         if (password.length <= 20) _userPassword.update { password }
+    }
+    fun updateLoginType(loginType: LoginType) {
+        _loginState.update {
+            it.copy(loginType = loginType)
+        }
+    }
+    fun updateIsNeedVerificationCode(status: Boolean) {
+        _loginState.update {
+            it.copy(isRequiredVerificationCode = status)
+        }
     }
     fun showNotification(
         titleRes: Int = R.string.login_screen_error_notification_title_text,
