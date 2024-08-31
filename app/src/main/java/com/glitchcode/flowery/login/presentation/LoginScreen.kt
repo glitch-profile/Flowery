@@ -2,10 +2,15 @@ package com.glitchcode.flowery.login.presentation
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -13,16 +18,21 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
@@ -36,8 +46,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.InputModeManager
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInputModeManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,20 +68,29 @@ import com.glitchcode.flowery.core.presentation.components.notification.Swipeabl
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel()
+    viewModel: LoginViewModel = hiltViewModel(),
+    onNavigateToMainScreen: () -> Unit
 ) {
     val notificationState = viewModel.notificationState
     val loginState = viewModel.loginState.collectAsState()
-    
+
+    TopSectionImage(
+        modifier = Modifier
+            .fillMaxSize()
+    )
     Column(
         modifier = Modifier
             .fillMaxSize()
             .navigationBarsPadding()
+            .imePadding()
             .padding(bottom = 8.dp)
     ) {
         TopSection()
         Spacer(modifier = Modifier.weight(1f))
-        AuthForm(viewModel)
+        AuthForm(
+            viewModel,
+            onNavigateToMainScreen
+        )
         AnimatedVisibility(visible = loginState.value.loginType != LoginType.NEW_ACCOUNT) {
             Column {
                 Spacer(modifier = Modifier.height(48.dp))
@@ -106,7 +130,8 @@ private fun CreateAccountSection(
 
 @Composable
 private fun AuthForm(
-    viewModel: LoginViewModel
+    viewModel: LoginViewModel,
+    onLoginSuccess: () -> Unit
 ) {
     val loginState = viewModel.loginState.collectAsState()
     val phoneNumber = viewModel.phoneNumber.collectAsState()
@@ -192,7 +217,7 @@ private fun AuthForm(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp),
-                            onClick = { /*TODO*/ },
+                            onClick = { viewModel.loginByPhone(onLoginSuccess) },
                             enabled = phoneNumber.value.isNotEmpty() && verificationCode.value.isNotEmpty()
                         ) {
                             Text(text = stringResource(id = R.string.login_screen_login_button_text))
@@ -203,7 +228,7 @@ private fun AuthForm(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp),
-                            onClick = { /*TODO*/ },
+                            onClick = { viewModel.loginByPassword(onLoginSuccess) },
                             login.value.isNotEmpty() && password.value.isNotEmpty()
                         ) {
                             Text(text = stringResource(id = R.string.login_screen_login_button_text))
@@ -472,27 +497,29 @@ private fun LoginTypesDivider(
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun TopSection() {
     Box(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Image(
-            modifier = Modifier
-                .fillMaxWidth(),
-            painter = painterResource(id = R.drawable.ic_loginscreen_background),
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+        val isImeVisible = WindowInsets.isImeVisible
+        val topSpacerHeight = animateDpAsState(
+            targetValue = if (isImeVisible) 32.dp else 92.dp,
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+        )
+        val contentColor = animateColorAsState(
+            targetValue = if (isImeVisible) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.onPrimary
         )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .align(Alignment.Center)
-                .offset(y = 40.dp),
+                .statusBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Spacer(modifier = Modifier.height(topSpacerHeight.value))
             Row(
                 modifier = Modifier
 //                        .align(Alignment.Center)
@@ -505,7 +532,7 @@ private fun TopSection() {
                     painter = painterResource(id = R.drawable.ic_flowery),
                     contentDescription = "Flowery icon",
                     contentScale = ContentScale.FillHeight,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+                    colorFilter = ColorFilter.tint(contentColor.value)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
@@ -514,19 +541,80 @@ private fun TopSection() {
                     style = MaterialTheme.typography.displayLarge,
                     fontWeight = FontWeight.Bold,
                     maxLines = 1,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = contentColor.value
                 )
             }
-            Spacer(modifier = Modifier.height(90.dp))
-            Text(
+            AnimatedVisibility(
+                visible = !isImeVisible,
+                enter = expandVertically(
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ) + fadeIn(
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ),
+                exit = shrinkVertically(
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                ) + fadeOut(
+                    animationSpec = spring(
+                        stiffness = Spring.StiffnessMediumLow
+                    )
+                )
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(90.dp))
+                    Text(
+                        modifier = Modifier
+                            .padding(bottom = 60.dp),
+                        text = stringResource(id = R.string.login_screen_welcome_text)
+                            .uppercase(),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.displaySmall,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun TopSectionImage(
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+    ) {
+        val isImeVisible = WindowInsets.isImeVisible
+        AnimatedVisibility(
+            visible = !isImeVisible,
+            enter = fadeIn(
+                animationSpec = spring(
+                    stiffness = Spring.StiffnessMediumLow
+                )
+            ),
+            exit = fadeOut(
+                animationSpec = spring(
+                    stiffness = Spring.StiffnessMediumLow
+                )
+            )
+        ) {
+            Image(
                 modifier = Modifier
-//                        .align(Alignment.BottomCenter)
-                    .padding(bottom = 60.dp),
-                text = stringResource(id = R.string.login_screen_welcome_text)
-                    .uppercase(),
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.displaySmall,
-                fontWeight = FontWeight.Bold
+                    .fillMaxWidth(),
+                painter = painterResource(id = R.drawable.ic_loginscreen_background),
+                contentDescription = null,
+                contentScale = ContentScale.FillWidth,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
             )
         }
     }
