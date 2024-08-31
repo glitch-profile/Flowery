@@ -511,7 +511,8 @@ private fun TopSection() {
         )
         val contentColor = animateColorAsState(
             targetValue = if (isImeVisible) MaterialTheme.colorScheme.primary
-            else MaterialTheme.colorScheme.onPrimary
+            else MaterialTheme.colorScheme.onPrimary,
+            animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
         )
         Column(
             modifier = Modifier
