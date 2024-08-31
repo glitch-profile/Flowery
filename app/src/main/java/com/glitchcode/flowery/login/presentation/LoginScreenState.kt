@@ -2,7 +2,10 @@ package com.glitchcode.flowery.login.presentation
 
 data class LoginScreenState(
     val loginType: LoginType = LoginType.PHONE,
-    val isRequiredVerificationCode: Boolean = false,
+    val isLoadingCode: Boolean = false,
+    val isNewUserLoadingCode: Boolean = false,
+    val isWaitingCodeInput: Boolean = false,
+    val isNewUserWaitingCodeInput: Boolean = false,
     val isLoggingIn: Boolean = false
 )
 

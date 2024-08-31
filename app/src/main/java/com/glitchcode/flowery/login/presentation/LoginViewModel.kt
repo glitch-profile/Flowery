@@ -32,6 +32,13 @@ class LoginViewModel @Inject constructor(
     private val _userPassword = MutableStateFlow("")
     val userPassword = _userPassword.asStateFlow()
 
+    private val _newUserFirstName = MutableStateFlow("")
+    val newUserFirstName = _newUserFirstName.asStateFlow()
+    private val _newUserLastName = MutableStateFlow("")
+    val newUserLastname = _newUserLastName.asStateFlow()
+    private val _newUserPhoneVerificationCode = MutableStateFlow("")
+    val newUserPhoneVerificationCode = _newUserPhoneVerificationCode.asStateFlow()
+
     val notificationState = SwipeableNotificationState()
 
     init {
@@ -58,10 +65,15 @@ class LoginViewModel @Inject constructor(
             it.copy(loginType = loginType)
         }
     }
-    fun updateIsRequestingCode(status: Boolean) {
-        _loginState.update {
-            it.copy(isRequiredVerificationCode = status)
-        }
+    fun updateNewUserFirstName(firstName: String) {
+        if (firstName.length <= 20) _newUserFirstName.update { firstName }
+    }
+    fun updateNewUserLastName(lastName: String) {
+        if (lastName.length <= 20) _newUserLastName.update { lastName }
+    }
+    fun updateNewUserVerificationCode(code: String) {
+        val formattedCode = code.filter { it.isDigit() }
+        if (formattedCode.length <= 5) _newUserPhoneVerificationCode.update { code }
     }
     fun showNotification(
         titleRes: Int = R.string.login_screen_error_notification_title_text,
@@ -75,15 +87,18 @@ class LoginViewModel @Inject constructor(
 
     fun requestVerificationCode() {
         viewModelScope.launch {
+            if (loginState.value.isLoadingCode) return@launch
+            _loginState.update { it.copy(isLoadingCode = true) }
             val phone = "+7" + phoneNumber.value
             val loginResult = authUseCase.loginByPhone(phone)
             if (loginResult is Resource.Success) {
-                _loginState.update { it.copy(isRequiredVerificationCode = true) }
+                _loginState.update { it.copy(isWaitingCodeInput = true) }
             } else {
                 showNotification(
                     textRes = loginResult.messageRes!!
                 )
             }
+            _loginState.update { it.copy(isLoadingCode = false) }
         }
     }
 
@@ -91,6 +106,8 @@ class LoginViewModel @Inject constructor(
         onLoginComplete: () -> Unit
     ) {
         viewModelScope.launch {
+            if (loginState.value.isLoggingIn) return@launch
+            _loginState.update { it.copy(isLoggingIn = true) }
             val loginResult = authUseCase.confirmPhone(
                 phoneNumber = phoneNumber.value,
                 verificationCode = phoneVerificationCode.value
@@ -102,6 +119,7 @@ class LoginViewModel @Inject constructor(
             } else showNotification(
                 textRes = loginResult.messageRes!!
             )
+            _loginState.update { it.copy(isLoggingIn = false) }
         }
     }
 
@@ -109,6 +127,8 @@ class LoginViewModel @Inject constructor(
         onLoginComplete: () -> Unit
     ) {
         viewModelScope.launch {
+            if (loginState.value.isLoggingIn) return@launch
+            _loginState.update { it.copy(isLoggingIn = true) }
             val loginResult = authUseCase.loginPassword(
                 login = userLogin.value,
                 password = userPassword.value
@@ -120,6 +140,7 @@ class LoginViewModel @Inject constructor(
             } else showNotification(
                 textRes = loginResult.messageRes!!
             )
+            _loginState.update { it.copy(isLoggingIn = false) }
         }
     }
 

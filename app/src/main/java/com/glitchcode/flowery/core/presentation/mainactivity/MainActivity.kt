@@ -47,7 +47,11 @@ class MainActivity : AppCompatActivity() {
                         startDestination = startDestination
                     ) {
                         composable("login-screen") {
-                            LoginScreen()
+                            LoginScreen(
+                                onNavigateToMainScreen = {
+                                    navController.navigate("main-screen")
+                                }
+                            )
                         }
                         composable("main-screen") {
 

@@ -23,7 +23,7 @@
     <!-- LOGIN SCREEN -->
     <string name="login_screen_welcome_text">С возвращением!</string>
     <string name="login_screen_no_account_yet_text">Ещё нет аккаунта?</string>
-    <string name="login_screen_error_notification_title_text">Не удалось войти в аккаунт…</string>
+    <string name="login_screen_error_notification_title_text">Не удалось войти в аккаунт</string>
     <string name="login_screen_phone_number_label">Номер телефона</string>
     <string name="login_screen_verification_code_label">Проверочный код</string>
     <string name="login_screen_login_label">Логин</string>
