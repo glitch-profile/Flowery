@@ -42,7 +42,7 @@ sealed class Resource<T>(
                         else -> Error(messageRes = R.string.api_response_code_unknown)
                     }
                 }
-                is ConnectTimeoutException -> Error(messageRes = R.string.api_response_code_not_found)
+                is ConnectTimeoutException -> Error(messageRes = R.string.api_response_code_connect_timeout)
                 else -> Error(messageRes = R.string.api_response_code_unknown)
             }
         }
