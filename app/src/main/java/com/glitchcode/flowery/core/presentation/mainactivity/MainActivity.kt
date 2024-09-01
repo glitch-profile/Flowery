@@ -49,7 +49,8 @@ class MainActivity : AppCompatActivity() {
                         composable("login-screen") {
                             LoginScreen(
                                 onNavigateToMainScreen = {
-                                    navController.navigate("main-screen")
+                                    println("ACCOUNT CREATED")
+//                                    navController.navigate("main-screen")
                                 }
                             )
                         }

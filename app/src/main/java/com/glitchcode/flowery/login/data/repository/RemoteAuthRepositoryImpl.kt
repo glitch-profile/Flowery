@@ -3,6 +3,7 @@ package com.glitchcode.flowery.login.data.repository
 import com.glitchcode.flowery.core.data.entity.ApiResponseDto
 import com.glitchcode.flowery.core.domain.utils.ApiResponseMessageCode
 import com.glitchcode.flowery.core.domain.utils.Resource
+import com.glitchcode.flowery.login.data.entity.AuthNewUserDataDto
 import com.glitchcode.flowery.login.data.entity.AuthPasswordDataDto
 import com.glitchcode.flowery.login.data.entity.AuthPhoneDataDto
 import com.glitchcode.flowery.login.data.entity.AuthResponseDto
@@ -27,12 +28,8 @@ class RemoteAuthRepositoryImpl @Inject constructor(
 
     override suspend fun loginByPhone(phoneNumber: String): Resource<Unit> {
         return try {
-            val authRequestData = AuthPhoneDataDto(
-                phone = phoneNumber,
-                code = null
-            )
-            val response: ApiResponseDto<Unit> = client.post("$PATH/login-phone") {
-                setBody(authRequestData)
+            val response: ApiResponseDto<Unit> = client.post("$PATH/verify-phone-number") {
+                setBody(phoneNumber)
                 contentType(ContentType.Application.Json)
             }.body()
             if (response.status) {
@@ -57,7 +54,7 @@ class RemoteAuthRepositoryImpl @Inject constructor(
                 phone = phoneNumber,
                 code = verificationCode
             )
-            val responseInfo = client.post("$PATH/client-verification") {
+            val responseInfo = client.post("$PATH/login") {
                 setBody(authRequestData)
                 contentType(ContentType.Application.Json)
             }
@@ -84,6 +81,57 @@ class RemoteAuthRepositoryImpl @Inject constructor(
             )
             val responseInfo = client.post("$PATH/login-password") {
                 setBody(authPasswordData)
+                contentType(ContentType.Application.Json)
+            }
+            val body = responseInfo.body<ApiResponseDto<Unit>>()
+            if (body.status) {
+                val sessionInfo = responseInfo.headers[AUTH_SESSION_KEY]!!
+                Resource.Success(data = sessionInfo)
+            } else {
+                Resource.Error(
+                    message = body.message,
+                    messageRes = ApiResponseMessageCode.getMessageRes(body.messageCode)
+                )
+            }
+        } catch (e: Exception) {
+            Resource.getResourceFromException(e)
+        }
+    }
+
+    override suspend fun registerNewPhone(phoneNumber: String): Resource<Unit> {
+        return try {
+            val response: ApiResponseDto<Unit> = client.post("$PATH/verify-new-phone-number") {
+                setBody(phoneNumber)
+                contentType(ContentType.Application.Json)
+            }.body()
+            if (response.status) {
+                Resource.Success(data = Unit)
+            } else {
+                Resource.Error(
+                    messageRes = ApiResponseMessageCode.getMessageRes(response.messageCode),
+                    message = response.message
+                )
+            }
+        } catch (e: Exception) {
+            Resource.getResourceFromException(e)
+        }
+    }
+
+    override suspend fun registerNewAccount(
+        firstName: String,
+        lastName: String,
+        phoneNumber: String,
+        verificationCode: String
+    ): Resource<String> {
+        return try {
+            val newUserData = AuthNewUserDataDto(
+                firstName = firstName,
+                lastName = lastName,
+                phone = phoneNumber,
+                verificationCode = verificationCode
+            )
+            val responseInfo = client.post("$PATH/sign-in") {
+                setBody(newUserData)
                 contentType(ContentType.Application.Json)
             }
             val body = responseInfo.body<ApiResponseDto<Unit>>()

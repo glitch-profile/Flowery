@@ -19,6 +19,17 @@ interface RemoteAuthRepository {
         password: String
     ): Resource<String>
 
+    suspend fun registerNewPhone(
+        phoneNumber: String
+    ): Resource<Unit>
+
+    suspend fun registerNewAccount(
+        firstName: String,
+        lastName: String,
+        phoneNumber: String,
+        verificationCode: String
+    ): Resource<String>
+
     suspend fun registerSession(
         sessionId: String
     ): Resource<AuthResponseDto>

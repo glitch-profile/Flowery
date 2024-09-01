@@ -137,7 +137,7 @@ private fun AuthForm(
     val login = viewModel.userLogin.collectAsState()
     val password = viewModel.userPassword.collectAsState()
     val newUserFirstName = viewModel.newUserFirstName.collectAsState()
-    val newUserLastName = viewModel.newUserLastname.collectAsState()
+    val newUserLastName = viewModel.newUserLastName.collectAsState()
     val newUserVerificationCode = viewModel.newUserPhoneVerificationCode.collectAsState()
 
     Column(
@@ -161,14 +161,14 @@ private fun AuthForm(
             when (loginType) {
                 LoginType.PHONE -> {
                     AuthByPhoneFields(
-                        viewModel = viewModel,
                         phoneNumber = phoneNumber.value,
                         verificationCode = verificationCode.value,
                         isRequestingCode = loginState.value.isLoadingCode,
                         isWaitingCodeInput = loginState.value.isWaitingCodeInput,
                         onPhoneChanges = { viewModel.updatePhoneNumberText(it) },
                         onVerificationCodeChanges = { viewModel.updateVerificationCodeText(it) },
-                        onRequestCodeClicked = { viewModel.requestVerificationCode() }
+                        onRequestCodeClicked = { viewModel.requestVerificationCode() },
+                        onLoginRequested = { viewModel.loginByPhone(onLoginSuccess) }
                     )
                 }
                 LoginType.PASSWORD -> {
@@ -176,7 +176,8 @@ private fun AuthForm(
                         login = login.value,
                         password = password.value,
                         onLoginChanges = { viewModel.updateLoginText(it) },
-                        onPasswordChanges = { viewModel.updatePasswordText(it) }
+                        onPasswordChanges = { viewModel.updatePasswordText(it) },
+                        onLoginRequested = { viewModel.loginByPassword(onLoginSuccess) }
                     )
                 }
                 LoginType.NEW_ACCOUNT -> {
@@ -191,7 +192,8 @@ private fun AuthForm(
                         onLastNameChanges = { viewModel.updateNewUserLastName(it) },
                         onPhoneChanges = { viewModel.updatePhoneNumberText(it) },
                         onVerificationCodeChanges = { viewModel.updateNewUserVerificationCode(it) },
-                        onRequestCodeClicked = {}
+                        onRequestCodeClicked = { viewModel.requestVerificationCode() },
+                        onRegistrationRequested = { viewModel.signIn(onLoginSuccess) }
                     )
                 }
             }
@@ -222,7 +224,7 @@ private fun AuthForm(
                                 .fillMaxWidth()
                                 .height(48.dp),
                             onClick = { viewModel.loginByPhone(onLoginSuccess) },
-                            enabled = phoneNumber.value.isNotEmpty() && verificationCode.value.isNotEmpty()
+                            enabled = phoneNumber.value.isNotBlank() && verificationCode.value.isNotBlank()
                         ) {
                             Text(text = stringResource(id = R.string.login_screen_login_button_text))
                         }
@@ -233,7 +235,7 @@ private fun AuthForm(
                                 .fillMaxWidth()
                                 .height(48.dp),
                             onClick = { viewModel.loginByPassword(onLoginSuccess) },
-                            enabled = login.value.isNotEmpty() && password.value.isNotEmpty()
+                            enabled = login.value.isNotBlank() && password.value.isNotBlank()
                         ) {
                             Text(text = stringResource(id = R.string.login_screen_login_button_text))
                         }
@@ -243,8 +245,11 @@ private fun AuthForm(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(48.dp),
-                            onClick = { /*TODO*/ },
-                            enabled = true // TODO
+                            onClick = { viewModel.signIn(onLoginSuccess) },
+                            enabled = newUserFirstName.value.isNotBlank()
+                                    && newUserLastName.value.isNotBlank()
+                                    && phoneNumber.value.isNotBlank()
+                                    && newUserVerificationCode.value.isNotBlank()
                         ) {
                             Text(text = stringResource(id = R.string.login_screen_create_account_button_text))
                         }
@@ -311,14 +316,14 @@ private fun AuthForm(
 
 @Composable
 private fun AuthByPhoneFields(
-    viewModel: LoginViewModel,
     phoneNumber: String,
     isRequestingCode: Boolean,
     isWaitingCodeInput: Boolean,
     verificationCode: String,
     onPhoneChanges: (String) -> Unit,
     onVerificationCodeChanges: (String) -> Unit,
-    onRequestCodeClicked: () -> Unit
+    onRequestCodeClicked: () -> Unit,
+    onLoginRequested: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -392,7 +397,7 @@ private fun AuthByPhoneFields(
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = { /*TODO*/ }
+                        onDone = { onLoginRequested.invoke() }
                     )
                 )
             }
@@ -405,7 +410,8 @@ private fun AuthByPasswordFields(
     login: String,
     password: String,
     onLoginChanges: (String) -> Unit,
-    onPasswordChanges: (String) -> Unit
+    onPasswordChanges: (String) -> Unit,
+    onLoginRequested: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -444,7 +450,7 @@ private fun AuthByPasswordFields(
                 imeAction = ImeAction.Done
             ),
             keyboardActions = KeyboardActions(
-                onDone = { /*TODO*/ }
+                onDone = { onLoginRequested.invoke() }
             )
         )
     }
@@ -462,7 +468,8 @@ private fun AuthNewAccountFields(
     onLastNameChanges: (String) -> Unit,
     onPhoneChanges: (String) -> Unit,
     onVerificationCodeChanges: (String) -> Unit,
-    onRequestCodeClicked: () -> Unit
+    onRequestCodeClicked: () -> Unit,
+    onRegistrationRequested: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -527,6 +534,23 @@ private fun AuthNewAccountFields(
                         onClick = { onRequestCodeClicked.invoke() }
                     ) {
                         Text(text = stringResource(id = R.string.login_screen_send_code_button_text))
+                        AnimatedVisibility(
+                            visible = isRequestingCode,
+                            enter = expandHorizontally(
+                                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                            ),
+                            exit = shrinkHorizontally(
+                                animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                            )
+                        ) {
+                            Row {
+                                Spacer(modifier = Modifier.width(12.dp))
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(16.dp),
+                                    strokeWidth = 3.dp
+                                )
+                            }
+                        }
                     }
                     Spacer(modifier = Modifier.width(12.dp))
                 }
@@ -559,7 +583,7 @@ private fun AuthNewAccountFields(
                         imeAction = ImeAction.Done
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = { /*TODO*/ }
+                        onDone = { onRegistrationRequested.invoke() }
                     )
                 )
             }

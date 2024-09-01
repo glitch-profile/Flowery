@@ -35,7 +35,7 @@ class LoginViewModel @Inject constructor(
     private val _newUserFirstName = MutableStateFlow("")
     val newUserFirstName = _newUserFirstName.asStateFlow()
     private val _newUserLastName = MutableStateFlow("")
-    val newUserLastname = _newUserLastName.asStateFlow()
+    val newUserLastName = _newUserLastName.asStateFlow()
     private val _newUserPhoneVerificationCode = MutableStateFlow("")
     val newUserPhoneVerificationCode = _newUserPhoneVerificationCode.asStateFlow()
 
@@ -89,10 +89,11 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             if (loginState.value.isLoadingCode) return@launch
             _loginState.update { it.copy(isLoadingCode = true) }
-            val phone = "+7" + phoneNumber.value
-            val loginResult = authUseCase.loginByPhone(phone)
+            val isForNewAccount = loginState.value.loginType == LoginType.NEW_ACCOUNT
+            val loginResult = authUseCase.sendVerificationCode(phoneNumber.value, isForNewAccount)
             if (loginResult is Resource.Success) {
-                _loginState.update { it.copy(isWaitingCodeInput = true) }
+                if (isForNewAccount) _loginState.update { it.copy(isNewUserWaitingCodeInput = true) }
+                else _loginState.update { it.copy(isWaitingCodeInput = true) }
             } else {
                 showNotification(
                     textRes = loginResult.messageRes!!
@@ -108,14 +109,12 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             if (loginState.value.isLoggingIn) return@launch
             _loginState.update { it.copy(isLoggingIn = true) }
-            val loginResult = authUseCase.confirmPhone(
+            val loginResult = authUseCase.loginPhone(
                 phoneNumber = phoneNumber.value,
                 verificationCode = phoneVerificationCode.value
             )
             if (loginResult is Resource.Success) {
-                registerSession {
-                    onLoginComplete.invoke()
-                }
+                onLoginComplete.invoke()
             } else showNotification(
                 textRes = loginResult.messageRes!!
             )
@@ -134,9 +133,7 @@ class LoginViewModel @Inject constructor(
                 password = userPassword.value
             )
             if (loginResult is Resource.Success) {
-                registerSession {
-                    onLoginComplete.invoke()
-                }
+                onLoginComplete.invoke()
             } else showNotification(
                 textRes = loginResult.messageRes!!
             )
@@ -144,12 +141,27 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private suspend fun registerSession(onSessionRegistered: () -> Unit) {
-        val registerSessionResult = authUseCase.registerSession()
-        if (registerSessionResult is Resource.Success) {
-            onSessionRegistered.invoke()
-        } else showNotification(
-            textRes = registerSessionResult.messageRes!!
-        )
+    fun signIn(
+        onSignInComplete: () -> Unit
+    ) {
+        viewModelScope.launch {
+            if (loginState.value.isLoggingIn) return@launch
+            _loginState.update { it.copy(isLoggingIn = true) }
+            val signInResult = authUseCase.signIn(
+                firstName = newUserFirstName.value,
+                lastName = newUserLastName.value,
+                phoneNumber = phoneNumber.value,
+                verificationCode = newUserPhoneVerificationCode.value
+            )
+            println(signInResult.message)
+            if (signInResult is Resource.Success) {
+                onSignInComplete.invoke()
+            } else {
+                showNotification(
+                    textRes = signInResult.messageRes!!
+                )
+            }
+            _loginState.update { it.copy(isLoggingIn = false) }
+        }
     }
 }

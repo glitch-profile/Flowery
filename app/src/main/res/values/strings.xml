@@ -16,6 +16,7 @@
     <string name="api_response_code_session_not_found">Session not found or expired</string>
     <string name="api_response_code_auth_data_incorrect">User with such login and password was not found</string>
     <string name="api_response_code_phone_not_found">No user with this phone number was found</string>
+    <string name="api_response_code_phone_in_use">An account with this phone number already exists</string>
     <string name="api_response_code_phone_incorrect">Phone number entered incorrectly</string>
     <string name="api_response_code_code_incorrect">This confirmation code is incorrect</string>
 

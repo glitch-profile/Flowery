@@ -3,9 +3,11 @@ package com.glitchcode.flowery.login.data.entity
 import androidx.annotation.Keep
 import kotlinx.serialization.Serializable
 
-@Keep
 @Serializable
-data class AuthPhoneDataDto(
+@Keep
+data class AuthNewUserDataDto(
+    val firstName: String,
+    val lastName: String,
     val phone: String,
-    val code: String
+    val verificationCode: String
 )

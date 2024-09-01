@@ -16,43 +16,52 @@ class AuthUseCase @Inject constructor(
     // TODO: Add notifications setup
 ) {
 
-    suspend fun loginByPhone(
-        phoneNumber: String
+    suspend fun sendVerificationCode(
+        phoneNumber: String,
+        isNewAccount: Boolean
     ): Resource<Unit> {
-        if (!Regex("^\\+7\\d{10}\$").matches(phoneNumber)) {
+        val phone = "+7$phoneNumber"
+        println(phone)
+        if (!Regex("^\\+7\\d{10}\$").matches(phone)) {
             return Resource.Error(
                 message = "incorrect phone number",
                 messageRes = R.string.api_response_code_phone_incorrect
             )
         }
-        val result = apiAuthRepository.loginByPhone(phoneNumber)
+        val result = if (isNewAccount) apiAuthRepository.registerNewPhone(phone)
+        else apiAuthRepository.loginByPhone(phone)
         return result
     }
 
-    suspend fun confirmPhone(
+    suspend fun loginPhone(
         phoneNumber: String,
         verificationCode: String
-    ): Resource<String> {
-        if (!Regex("^\\+7\\d{10}\$").matches(phoneNumber)) {
+    ): Resource<Unit> {
+        val phone = "+7$phoneNumber"
+        if (!Regex("^\\+7\\d{10}\$").matches(phone)) {
             return Resource.Error(
                 message = "incorrect phone number",
                 messageRes = R.string.api_response_code_phone_incorrect
             )
         }
         val result = apiAuthRepository.confirmPhoneNumber(
-            phoneNumber = phoneNumber,
+            phoneNumber = phone,
             verificationCode = verificationCode
         )
         if (result is Resource.Success) {
             localAuthRepository.setUserSessionId(result.data!!)
-        }
-        return result
+            val registerSessionResult = registerSession()
+            return registerSessionResult
+        } else return Resource.Error(
+            messageRes = result.messageRes!!,
+            message = result.message
+        )
     }
 
     suspend fun loginPassword(
         login: String,
         password: String
-    ): Resource<String> {
+    ): Resource<Unit> {
         val result = apiAuthRepository.loginByPassword(
             username = login,
             password = password
@@ -60,11 +69,44 @@ class AuthUseCase @Inject constructor(
         if (result is Resource.Success) {
             localAuthRepository.setSavedEmployeeLogin(login)
             localAuthRepository.setUserSessionId(result.data!!)
-        }
-        return result
+            val registerSessionResult = registerSession()
+            return registerSessionResult
+        } else return Resource.Error(
+            messageRes = result.messageRes!!,
+            message = result.message
+        )
     }
 
-    suspend fun registerSession(): Resource<AuthResponseDto> {
+    suspend fun signIn(
+        firstName: String,
+        lastName: String,
+        phoneNumber: String,
+        verificationCode: String
+    ): Resource<Unit> {
+        val phone = "+7$phoneNumber"
+        if (!Regex("^\\+7\\d{10}\$").matches(phone)) {
+            return Resource.Error(
+                message = "incorrect phone number",
+                messageRes = R.string.api_response_code_phone_incorrect
+            )
+        }
+        val result = apiAuthRepository.registerNewAccount(
+            firstName = firstName,
+            lastName = lastName,
+            phoneNumber = phone,
+            verificationCode = verificationCode
+        )
+        if (result is Resource.Success) {
+            localAuthRepository.setUserSessionId(result.data!!)
+            val registerSessionResult = registerSession()
+            return registerSessionResult
+        } else return Resource.Error(
+            messageRes = result.messageRes!!,
+            message = result.message
+        )
+    }
+
+    private suspend fun registerSession(): Resource<Unit> {
         val sessionId = localAuthRepository.getUserSessionId() ?: kotlin.run {
             return Resource.Error(
                 message = "session not found.",
@@ -78,8 +120,11 @@ class AuthUseCase @Inject constructor(
             localAuthRepository.setLoggedClientId(authData.clientId)
             localAuthRepository.setLoggedEmployeeId(authData.employeeId)
             localAuthRepository.setEmployeeRoles(authData.employeeRoles)
-        }
-        return result
+            return Resource.Success(Unit)
+        } else return Resource.Error(
+            messageRes = result.messageRes!!,
+            message = result.message
+        )
     }
 
     suspend fun updateAuthInfo(): Resource<AuthResponseDto> {

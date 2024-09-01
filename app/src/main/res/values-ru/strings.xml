@@ -17,6 +17,7 @@
     <string name="api_response_code_session_not_found">Сессия не найдена или истекла</string>
     <string name="api_response_code_auth_data_incorrect">Пользователь с такими логином и паролем не найден</string>
     <string name="api_response_code_phone_not_found">Пользователь с таким номером телефона не найден</string>
+    <string name="api_response_code_phone_in_use">Аккаунт с таким номером телефона уже существует</string>
     <string name="api_response_code_phone_incorrect">Номер телефона введен неверно</string>
     <string name="api_response_code_code_incorrect">Код подтверждения неверный</string>
 

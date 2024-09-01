@@ -13,6 +13,7 @@ enum class ApiResponseMessageCode() {
     //login errors
     AUTH_DATA_INCORRECT,
     PHONE_NOT_FOUND,
+    PHONE_ALREADY_IN_USE,
     PHONE_INCORRECT,
     CODE_INCORRECT;
 
@@ -32,6 +33,7 @@ enum class ApiResponseMessageCode() {
                 PHONE_NOT_FOUND -> R.string.api_response_code_phone_not_found
                 PHONE_INCORRECT -> R.string.api_response_code_phone_incorrect
                 CODE_INCORRECT -> R.string.api_response_code_code_incorrect
+                PHONE_ALREADY_IN_USE -> R.string.api_response_code_phone_in_use
             }
         }
     }
