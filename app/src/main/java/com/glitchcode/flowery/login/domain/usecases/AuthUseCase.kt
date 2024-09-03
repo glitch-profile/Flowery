@@ -20,11 +20,17 @@ class AuthUseCase @Inject constructor(
         phoneNumber: String,
         isNewAccount: Boolean
     ): Resource<Unit> {
+        if (phoneNumber.isBlank()) {
+            return Resource.Error(
+                messageRes = R.string.login_screen_error_empty_phone_field,
+                message = "Phone is empty."
+            )
+        }
         val phone = "+7$phoneNumber"
         println(phone)
         if (!Regex("^\\+7\\d{10}\$").matches(phone)) {
             return Resource.Error(
-                message = "incorrect phone number",
+                message = "Incorrect phone number",
                 messageRes = R.string.api_response_code_phone_incorrect
             )
         }
@@ -37,10 +43,16 @@ class AuthUseCase @Inject constructor(
         phoneNumber: String,
         verificationCode: String
     ): Resource<Unit> {
+        if (phoneNumber.isBlank()) {
+            return Resource.Error(
+                messageRes = R.string.login_screen_error_empty_phone_field,
+                message = "Phone is empty."
+            )
+        }
         val phone = "+7$phoneNumber"
         if (!Regex("^\\+7\\d{10}\$").matches(phone)) {
             return Resource.Error(
-                message = "incorrect phone number",
+                message = "Incorrect phone number",
                 messageRes = R.string.api_response_code_phone_incorrect
             )
         }
@@ -62,6 +74,12 @@ class AuthUseCase @Inject constructor(
         login: String,
         password: String
     ): Resource<Unit> {
+        if (login.isBlank() || password.isBlank()) {
+            return Resource.Error(
+                messageRes = R.string.login_screen_error_empty_fields,
+                message = "Fields are empty."
+            )
+        }
         val result = apiAuthRepository.loginByPassword(
             username = login,
             password = password
@@ -83,10 +101,20 @@ class AuthUseCase @Inject constructor(
         phoneNumber: String,
         verificationCode: String
     ): Resource<Unit> {
+        if (
+            firstName.isBlank() || lastName.isBlank()
+            || phoneNumber.isBlank()
+//            || verificationCode.isBlank()
+        ) {
+            return Resource.Error(
+                messageRes = R.string.login_screen_error_empty_fields,
+                message = "Fields are empty."
+            )
+        }
         val phone = "+7$phoneNumber"
         if (!Regex("^\\+7\\d{10}\$").matches(phone)) {
             return Resource.Error(
-                message = "incorrect phone number",
+                message = "Incorrect phone number",
                 messageRes = R.string.api_response_code_phone_incorrect
             )
         }
@@ -109,7 +137,7 @@ class AuthUseCase @Inject constructor(
     private suspend fun registerSession(): Resource<Unit> {
         val sessionId = localAuthRepository.getUserSessionId() ?: kotlin.run {
             return Resource.Error(
-                message = "session not found.",
+                message = "Session not found.",
                 messageRes = R.string.api_response_code_session_not_found
             )
         }
@@ -130,7 +158,7 @@ class AuthUseCase @Inject constructor(
     suspend fun updateAuthInfo(): Resource<AuthResponseDto> {
         val sessionId = localAuthRepository.getUserSessionId() ?: kotlin.run {
             return Resource.Error(
-                message = "session not found.",
+                message = "Session not found.",
                 messageRes = R.string.api_response_code_session_not_found
             )
         }
@@ -153,7 +181,7 @@ class AuthUseCase @Inject constructor(
     suspend fun logout(): Resource<Unit> {
         val sessionId = localAuthRepository.getUserSessionId() ?: kotlin.run {
             return Resource.Error(
-                message = "session not found.",
+                message = "Session not found.",
                 messageRes = R.string.api_response_code_session_not_found
             )
         }
