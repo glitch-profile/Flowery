@@ -39,6 +39,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -227,6 +228,24 @@ private fun AuthForm(
                             enabled = phoneNumber.value.isNotBlank() && verificationCode.value.isNotBlank()
                         ) {
                             Text(text = stringResource(id = R.string.login_screen_login_button_text))
+                            AnimatedVisibility(
+                                visible = loginState.value.isLoggingIn,
+                                enter = expandHorizontally(
+                                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                                ),
+                                exit = shrinkHorizontally(
+                                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                                )
+                            ) {
+                                Row {
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(16.dp),
+                                        strokeWidth = 3.dp,
+                                        color = LocalContentColor.current
+                                    )
+                                }
+                            }
                         }
                     }
                     LoginType.PASSWORD -> {
@@ -238,6 +257,24 @@ private fun AuthForm(
                             enabled = login.value.isNotBlank() && password.value.isNotBlank()
                         ) {
                             Text(text = stringResource(id = R.string.login_screen_login_button_text))
+                            AnimatedVisibility(
+                                visible = loginState.value.isLoggingIn,
+                                enter = expandHorizontally(
+                                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                                ),
+                                exit = shrinkHorizontally(
+                                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                                )
+                            ) {
+                                Row {
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(16.dp),
+                                        strokeWidth = 3.dp,
+                                        color = LocalContentColor.current
+                                    )
+                                }
+                            }
                         }
                     }
                     LoginType.NEW_ACCOUNT -> {
@@ -252,6 +289,24 @@ private fun AuthForm(
                                     && newUserVerificationCode.value.isNotBlank()
                         ) {
                             Text(text = stringResource(id = R.string.login_screen_create_account_button_text))
+                            AnimatedVisibility(
+                                visible = loginState.value.isLoggingIn,
+                                enter = expandHorizontally(
+                                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                                ),
+                                exit = shrinkHorizontally(
+                                    animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+                                )
+                            ) {
+                                Row {
+                                    Spacer(modifier = Modifier.width(12.dp))
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(16.dp),
+                                        strokeWidth = 3.dp,
+                                        color = LocalContentColor.current
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -429,9 +484,6 @@ private fun AuthByPasswordFields(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { /*TODO*/ }
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -489,9 +541,6 @@ private fun AuthNewAccountFields(
                 autoCorrect = true,
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { /*TODO*/ }
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -509,9 +558,6 @@ private fun AuthNewAccountFields(
                 autoCorrect = true,
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { /*TODO*/ }
             )
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -624,7 +670,7 @@ private fun TopSection() {
     ) {
         val isImeVisible = WindowInsets.isImeVisible
         val topSpacerHeight = animateDpAsState(
-            targetValue = if (isImeVisible) 16.dp else 92.dp,
+            targetValue = if (isImeVisible) 16.dp else 112.dp,
             animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
         )
         val contentColor = animateColorAsState(

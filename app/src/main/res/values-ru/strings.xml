@@ -15,8 +15,8 @@
     <!-- AUTH -->
     <string name="api_response_code_user_not_found">Пользователь не найден</string>
     <string name="api_response_code_session_not_found">Сессия не найдена или истекла</string>
-    <string name="api_response_code_auth_data_incorrect">Пользователь с такими логином и паролем не найден</string>
-    <string name="api_response_code_phone_not_found">Пользователь с таким номером телефона не найден</string>
+    <string name="api_response_code_auth_data_incorrect">Похоже, такого пользователя не существует</string>
+    <string name="api_response_code_phone_not_found">Код подтверждения не найден. Пожалуйста, запросите его повторно</string>
     <string name="api_response_code_phone_in_use">Аккаунт с таким номером телефона уже существует</string>
     <string name="api_response_code_phone_incorrect">Номер телефона введен неверно</string>
     <string name="api_response_code_code_incorrect">Код подтверждения неверный</string>
@@ -37,6 +37,8 @@
     <string name="login_screen_login_phone_button_text">Войти по номеру телефона</string>
     <string name="login_screen_login_password_button_text">Войти при помощи пароля</string>
     <string name="login_screen_register_button_text">Создать</string>
+    <string name="login_screen_error_empty_fields">Пожалуйста, заполните все поля</string>
+    <string name="login_screen_error_empty_phone_field">Пожалуйста, введите Ваш номер телефона</string>
 
 
 

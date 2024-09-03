@@ -14,8 +14,8 @@
     <!-- AUTH -->
     <string name="api_response_code_user_not_found">User not found</string>
     <string name="api_response_code_session_not_found">Session not found or expired</string>
-    <string name="api_response_code_auth_data_incorrect">User with such login and password was not found</string>
-    <string name="api_response_code_phone_not_found">No user with this phone number was found</string>
+    <string name="api_response_code_auth_data_incorrect">It looks like no such user exists</string>
+    <string name="api_response_code_phone_not_found">Confirmation code not found. Please request it again</string>
     <string name="api_response_code_phone_in_use">An account with this phone number already exists</string>
     <string name="api_response_code_phone_incorrect">Phone number entered incorrectly</string>
     <string name="api_response_code_code_incorrect">This confirmation code is incorrect</string>
@@ -36,6 +36,8 @@
     <string name="login_screen_login_phone_button_text">Login using phone number</string>
     <string name="login_screen_login_password_button_text">Login using password</string>
     <string name="login_screen_register_button_text">Register</string>
+    <string name="login_screen_error_empty_fields">Please fill in all fields</string>
+    <string name="login_screen_error_empty_phone_field">Please fill in phone number</string>
 
 
 
