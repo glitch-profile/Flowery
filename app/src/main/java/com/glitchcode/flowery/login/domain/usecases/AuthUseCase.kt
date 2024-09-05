@@ -178,21 +178,13 @@ class AuthUseCase @Inject constructor(
         return result
     }
 
-    suspend fun logout(): Resource<Unit> {
-        val sessionId = localAuthRepository.getUserSessionId() ?: kotlin.run {
-            return Resource.Error(
-                message = "Session not found.",
-                messageRes = R.string.api_response_code_session_not_found
-            )
-        }
-        val result = apiAuthRepository.logout(sessionId)
-        if (result is Resource.Success) {
-            localAuthRepository.setLoggedPersonId(null)
-            localAuthRepository.setLoggedClientId(null)
-            localAuthRepository.setLoggedEmployeeId(null)
-            localAuthRepository.setEmployeeRoles(emptyList())
-        }
-        return result
+    suspend fun logout(){
+        val sessionId = localAuthRepository.getUserSessionId()
+        if (sessionId != null) apiAuthRepository.logout(sessionId)
+        localAuthRepository.setLoggedPersonId(null)
+        localAuthRepository.setLoggedClientId(null)
+        localAuthRepository.setLoggedEmployeeId(null)
+        localAuthRepository.setEmployeeRoles(emptyList())
     }
 
 }

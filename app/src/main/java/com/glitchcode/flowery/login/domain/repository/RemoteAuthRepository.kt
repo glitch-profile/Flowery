@@ -46,6 +46,6 @@ interface RemoteAuthRepository {
 
     suspend fun logout(
         sessionId: String
-    ): Resource<Unit>
+    )
 
 }

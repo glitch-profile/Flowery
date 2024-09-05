@@ -185,11 +185,11 @@ class RemoteAuthRepositoryImpl @Inject constructor(
 
     override suspend fun updateAuthInfo(sessionId: String): Resource<AuthResponseDto> {
         return try {
-            val response: ApiResponseDto<AuthResponseDto> = client.get("$PATH/update-auth-session") {
+            val response: ApiResponseDto<AuthResponseDto?> = client.get("$PATH/update-auth-info") {
                 header(AUTH_SESSION_KEY, sessionId)
             }.body()
             if (response.status) {
-                Resource.Success(data = response.data)
+                Resource.Success(data = response.data!!)
             } else {
                 Resource.Error(
                     message = response.message,
@@ -197,25 +197,16 @@ class RemoteAuthRepositoryImpl @Inject constructor(
                 )
             }
         } catch (e: Exception) {
+            println(e)
             Resource.getResourceFromException(e)
         }
     }
 
-    override suspend fun logout(sessionId: String): Resource<Unit> {
-        return try {
-            val response: ApiResponseDto<Unit> = client.get("$PATH/logout") {
+    override suspend fun logout(sessionId: String) {
+        try {
+            client.post("$PATH/logout") {
                 header(AUTH_SESSION_KEY, sessionId)
-            }.body()
-            if (response.status) {
-                Resource.Success(data = Unit)
-            } else {
-                Resource.Error(
-                    message = response.message,
-                    messageRes = ApiResponseMessageCode.getMessageRes(response.messageCode)
-                )
             }
-        } catch (e: Exception) {
-            Resource.getResourceFromException(e)
-        }
+        } catch (_: Exception) {  }
     }
 }
