@@ -12,7 +12,9 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.glitchcode.flowery.core.domain.utils.ScreenRoutes
 import com.glitchcode.flowery.core.theme.FloweryTheme
+import com.glitchcode.flowery.home.presentation.HomeScreen
 import com.glitchcode.flowery.login.presentation.LoginScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,16 +48,27 @@ class MainActivity : AppCompatActivity() {
                         navController = navController,
                         startDestination = startDestination
                     ) {
-                        composable("login-screen") {
+                        composable(ScreenRoutes.loginScreen) {
                             LoginScreen(
                                 onNavigateToMainScreen = {
-                                    println("ACCOUNT CREATED")
-//                                    navController.navigate("main-screen")
+                                    navController.navigate(ScreenRoutes.mainScreen) {
+                                        popUpTo(ScreenRoutes.loginScreen) {
+                                            inclusive = true
+                                        }
+                                    }
                                 }
                             )
                         }
-                        composable("main-screen") {
-
+                        composable(ScreenRoutes.mainScreen) {
+                            HomeScreen(
+                                onNavigateToLoginScreen = {
+                                    navController.navigate(ScreenRoutes.loginScreen) {
+                                        popUpTo(ScreenRoutes.mainScreen) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
                         }
                     }
                 }

@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import com.glitchcode.flowery.core.domain.repository.LocalAppearanceSettingsRepository
 import com.glitchcode.flowery.core.domain.repository.LocalAuthDataRepository
+import com.glitchcode.flowery.core.domain.utils.ScreenRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -61,9 +62,9 @@ class MainActivityViewModel @Inject constructor(
 
     private fun getStartRoute(): String {
         return if (localAuthData.getUserSessionId() != null) {
-            "main-screen"
+            ScreenRoutes.mainScreen
         } else {
-            "login-screen"
+            ScreenRoutes.loginScreen
         }
     }
 
