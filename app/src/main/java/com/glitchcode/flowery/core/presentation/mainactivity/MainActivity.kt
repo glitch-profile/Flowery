@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.glitchcode.flowery.core.domain.utils.ScreenRoutes
 import com.glitchcode.flowery.core.theme.FloweryTheme
 import com.glitchcode.flowery.home.presentation.HomeScreen
+import com.glitchcode.flowery.home.presentation.NotAuthorizedScreen
 import com.glitchcode.flowery.login.presentation.LoginScreen
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -62,6 +63,24 @@ class MainActivity : AppCompatActivity() {
                         composable(ScreenRoutes.mainScreen) {
                             HomeScreen(
                                 onNavigateToLoginScreen = {
+                                    navController.navigate(ScreenRoutes.loginScreen) {
+                                        popUpTo(ScreenRoutes.mainScreen) {
+                                            inclusive = true
+                                        }
+                                    }
+                                },
+                                onLoginDataOutdated = {
+                                    navController.navigate(ScreenRoutes.loginOutdatetdScreen) {
+                                        popUpTo(ScreenRoutes.mainScreen) {
+                                            inclusive = true
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                        composable(ScreenRoutes.loginOutdatetdScreen) {
+                            NotAuthorizedScreen(
+                                onLoginClicked = {
                                     navController.navigate(ScreenRoutes.loginScreen) {
                                         popUpTo(ScreenRoutes.mainScreen) {
                                             inclusive = true

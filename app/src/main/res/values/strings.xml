@@ -39,6 +39,11 @@
     <string name="login_screen_error_empty_fields">Please fill in all fields</string>
     <string name="login_screen_error_empty_phone_field">Please fill in phone number</string>
 
+    <!-- NOT AUTHORIZED SCREEN -->
+    <string name="not_authorized_screen_title">Login data is outdated</string>
+    <string name="not_authorized_screen_text">The login information on your device is out of date. Please log in to your account again.</string>
+    <string name="not_authorized_screen_login_button_text">Login again</string>
+
 
 
     <!-- REUSABLE -->

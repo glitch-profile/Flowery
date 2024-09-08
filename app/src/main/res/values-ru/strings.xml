@@ -40,6 +40,12 @@
     <string name="login_screen_error_empty_fields">Пожалуйста, заполните все поля</string>
     <string name="login_screen_error_empty_phone_field">Пожалуйста, введите Ваш номер телефона</string>
 
+    <!-- NOT AUTHORIZED SCREEN -->
+    <string name="not_authorized_screen_title">Данные устарели</string>
+<!--    <string name="not_authorized_screen_text">Данные для входа на вашем устройстве устарели. Сессия устарела или была завершена с другого устройства. Пожалуйста, войдите в аккаунт снова</string>-->
+    <string name="not_authorized_screen_text">Данные для входа на вашем устройстве устарели. Пожалуйста, войдите в аккаунт снова</string>
+    <string name="not_authorized_screen_login_button_text">Войти повторно</string>
+
 
 
     <!-- REUSABLE -->

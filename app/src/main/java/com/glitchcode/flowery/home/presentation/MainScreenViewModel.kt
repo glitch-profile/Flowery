@@ -1,15 +1,13 @@
 package com.glitchcode.flowery.home.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.glitchcode.flowery.core.domain.repository.LocalAuthDataRepository
 import com.glitchcode.flowery.core.domain.utils.Resource
 import com.glitchcode.flowery.login.domain.usecases.AuthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +19,9 @@ class MainScreenViewModel @Inject constructor(
     private val authUseCase: AuthUseCase
 ): ViewModel() {
 
-    private val _isLoggedIn = MutableStateFlow(true)
-    val isLoggedIn = _isLoggedIn.asStateFlow()
+    // TODO: when NotAuthorizedScreen will be a component, replace this with a bool state
+    private val _isLoggedIn = Channel<Boolean>()
+    val isLoggedIn = _isLoggedIn.receiveAsFlow()
 
     init {
         updateAuthInfo()
@@ -32,8 +31,7 @@ class MainScreenViewModel @Inject constructor(
         viewModelScope.launch {
             val result = authUseCase.updateAuthInfo()
             if (result is Resource.Error) {
-                Log.e(TAG, "updateAuthInfo-fail: ${result.message!!}")
-                _isLoggedIn.update { false }
+                _isLoggedIn.send(false)
             }
         }
     }
@@ -42,8 +40,8 @@ class MainScreenViewModel @Inject constructor(
         onLogoutComplete: () -> Unit
     ) {
         viewModelScope.launch {
-            authUseCase.logout()
-            onLogoutComplete.invoke()
+            val result = authUseCase.logout()
+            if (result is Resource.Success) onLogoutComplete.invoke()
         }
     }
 
