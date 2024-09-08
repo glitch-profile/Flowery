@@ -75,7 +75,7 @@ class LoginViewModel @Inject constructor(
         val formattedCode = code.filter { it.isDigit() }
         if (formattedCode.length <= 5) _newUserPhoneVerificationCode.update { code }
     }
-    fun showNotification(
+    private fun showNotification(
         titleRes: Int = R.string.login_screen_error_notification_title_text,
         textRes: Int
     ) {
@@ -89,17 +89,31 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             if (loginState.value.isLoadingCode) return@launch
             _loginState.update { it.copy(isLoadingCode = true) }
-            val isForNewAccount = loginState.value.loginType == LoginType.NEW_ACCOUNT
-            val loginResult = authUseCase.sendVerificationCode(phoneNumber.value, isForNewAccount)
+            val loginResult = authUseCase.sendVerificationCode(phoneNumber.value, isNewAccount = false)
             if (loginResult is Resource.Success) {
-                if (isForNewAccount) _loginState.update { it.copy(isNewUserWaitingCodeInput = true) }
-                else _loginState.update { it.copy(isWaitingCodeInput = true) }
+                _loginState.update { it.copy(isWaitingCodeInput = true) }
             } else {
                 showNotification(
                     textRes = loginResult.messageRes!!
                 )
             }
             _loginState.update { it.copy(isLoadingCode = false) }
+        }
+    }
+
+    fun newUserRequestVerificationCode() {
+        viewModelScope.launch {
+            if (loginState.value.isNewUserLoadingCode) return@launch
+            _loginState.update { it.copy(isNewUserLoadingCode = true) }
+            val loginResult = authUseCase.sendVerificationCode(phoneNumber.value, isNewAccount = true)
+            if (loginResult is Resource.Success) {
+                _loginState.update { it.copy(isNewUserWaitingCodeInput = true) }
+            } else {
+                showNotification(
+                    textRes = loginResult.messageRes!!
+                )
+            }
+            _loginState.update { it.copy(isNewUserLoadingCode = false) }
         }
     }
 
@@ -153,7 +167,6 @@ class LoginViewModel @Inject constructor(
                 phoneNumber = phoneNumber.value,
                 verificationCode = newUserPhoneVerificationCode.value
             )
-            println(signInResult.message)
             if (signInResult is Resource.Success) {
                 onSignInComplete.invoke()
             } else {

@@ -193,7 +193,7 @@ private fun AuthForm(
                         onLastNameChanges = { viewModel.updateNewUserLastName(it) },
                         onPhoneChanges = { viewModel.updatePhoneNumberText(it) },
                         onVerificationCodeChanges = { viewModel.updateNewUserVerificationCode(it) },
-                        onRequestCodeClicked = { viewModel.requestVerificationCode() },
+                        onRequestCodeClicked = { viewModel.newUserRequestVerificationCode() },
                         onRegistrationRequested = { viewModel.signIn(onLoginSuccess) }
                     )
                 }

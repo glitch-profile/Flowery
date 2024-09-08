@@ -27,7 +27,6 @@ class AuthUseCase @Inject constructor(
             )
         }
         val phone = "+7$phoneNumber"
-        println(phone)
         if (!Regex("^\\+7\\d{10}\$").matches(phone)) {
             return Resource.Error(
                 message = "Incorrect phone number",
@@ -178,13 +177,23 @@ class AuthUseCase @Inject constructor(
         return result
     }
 
-    suspend fun logout(){
+    suspend fun logout(): Resource<Unit> {
         val sessionId = localAuthRepository.getUserSessionId()
-        if (sessionId != null) apiAuthRepository.logout(sessionId)
+        if (sessionId != null) {
+            val result = apiAuthRepository.logout(sessionId)
+            if (result is Resource.Error) {
+                return Resource.Error(
+                    message = result.message,
+                    messageRes = result.messageRes!!
+                )
+            }
+        }
+        localAuthRepository.setUserSessionId(null)
         localAuthRepository.setLoggedPersonId(null)
         localAuthRepository.setLoggedClientId(null)
         localAuthRepository.setLoggedEmployeeId(null)
         localAuthRepository.setEmployeeRoles(emptyList())
+        return Resource.Success(data = Unit)
     }
 
 }

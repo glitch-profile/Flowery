@@ -202,11 +202,21 @@ class RemoteAuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun logout(sessionId: String) {
-        try {
-            client.post("$PATH/logout") {
+    override suspend fun logout(sessionId: String): Resource<Unit> {
+        return try {
+            val response: ApiResponseDto<Unit> = client.post("$PATH/logout") {
                 header(AUTH_SESSION_KEY, sessionId)
+            }.body()
+            if (response.status) {
+                Resource.Success(data = Unit)
+            } else {
+                Resource.Error(
+                    message = response.message,
+                    messageRes = ApiResponseMessageCode.getMessageRes(response.messageCode)
+                )
             }
-        } catch (_: Exception) {  }
+        } catch (e: Exception) {
+            Resource.getResourceFromException(e)
+        }
     }
 }
