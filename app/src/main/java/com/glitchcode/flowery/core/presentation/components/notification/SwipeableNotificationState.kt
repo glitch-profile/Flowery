@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class SwipeableNotificationState() {
+class SwipeableNotificationState {
 
     private val _notificationState = MutableStateFlow(SwipeableNotificationData())
     val notificationState = _notificationState.asStateFlow()

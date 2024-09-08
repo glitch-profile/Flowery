@@ -538,7 +538,7 @@ private fun AuthNewAccountFields(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
-                autoCorrect = true,
+                autoCorrectEnabled = true,
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             )
@@ -555,7 +555,7 @@ private fun AuthNewAccountFields(
             singleLine = true,
             keyboardOptions = KeyboardOptions(
                 capitalization = KeyboardCapitalization.Words,
-                autoCorrect = true,
+                autoCorrectEnabled = true,
                 keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next
             )
