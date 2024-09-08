@@ -3,7 +3,7 @@ package com.glitchcode.flowery.core.domain.utils
 import androidx.annotation.StringRes
 import com.glitchcode.flowery.R
 
-enum class ApiResponseMessageCode() {
+enum class ApiResponseMessageCode {
     OK,
     UNKNOWN,
     //general errors
@@ -18,7 +18,8 @@ enum class ApiResponseMessageCode() {
     CODE_INCORRECT;
 
     companion object {
-        @StringRes fun getMessageRes(errorCode: String): Int {
+        @StringRes
+        fun getMessageRes(errorCode: String): Int {
             val errorType = try {
                 ApiResponseMessageCode.valueOf(errorCode)
             } catch (e: IllegalArgumentException) {
