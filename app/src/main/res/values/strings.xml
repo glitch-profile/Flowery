@@ -43,6 +43,8 @@
     <string name="not_authorized_screen_title">Login data is outdated</string>
     <string name="not_authorized_screen_text">The login information on your device is out of date. Please log in to your account again.</string>
     <string name="not_authorized_screen_login_button_text">Login again</string>
+    <string name="not_authorized_screen_notification_title">Unable to logout</string>
+    <string name="not_authorized_screen_notification_text">Sorry, we were unable to log you out of your account. Please try again later</string>
 
 
 
