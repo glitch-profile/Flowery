@@ -45,7 +45,7 @@
     <string name="not_authorized_screen_text">Данные для входа на вашем устройстве устарели. Пожалуйста, войдите в аккаунт снова</string>
     <string name="not_authorized_screen_login_button_text">Войти повторно</string>
     <string name="not_authorized_screen_notification_title">Не удалось выйти</string>
-    <string name="not_authorized_screen_notification_text">Нам не удалось выйти из Вышего аккаунта. Пожалуйста, попробуйте позже</string>
+    <string name="not_authorized_screen_notification_text">Нам не удалось выйти из Вашего аккаунта. Пожалуйста, попробуйте позже</string>
 
 
 
