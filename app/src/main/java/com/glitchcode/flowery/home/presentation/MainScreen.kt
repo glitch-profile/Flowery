@@ -21,16 +21,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.glitchcode.flowery.core.presentation.components.FloweryButton
 import com.glitchcode.flowery.core.presentation.components.notification.SwipeableNotification
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HomeScreen(
     onNavigateToLoginScreen: () -> Unit,
     onLoginDataOutdated: () -> Unit,
-    viewModel: MainScreenViewModel = hiltViewModel()
+    viewModel: MainScreenViewModel = koinViewModel()
 ) {
     val notificationState = viewModel.notificationState
     

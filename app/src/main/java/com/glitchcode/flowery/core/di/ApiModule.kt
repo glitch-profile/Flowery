@@ -1,40 +1,32 @@
 package com.glitchcode.flowery.core.di
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 import javax.inject.Named
-import javax.inject.Singleton
 
 //private const val BASE_URL = "146.120.105.211:8081" //computer
-private const val BASE_URL = "192.168.208.121:8081" //notebook with mobile data
+private const val BASE_URL = "192.168.116.121:8081" //notebook with mobile data
 
-@Module
-@InstallIn(SingletonComponent::class)
-object ApiModule {
-
-    @Provides
-    @Singleton
-    @Named("RestClient")
-    fun provideRestApiKtorClient(): HttpClient = HttpClient(OkHttp) {
-        install(ContentNegotiation) {
-            json(Json {
-                isLenient = true
-                encodeDefaults = true
-                ignoreUnknownKeys = true
-            })
-        }
-        expectSuccess = true
-        install(DefaultRequest) {
-            url ("http://$BASE_URL")
+val apiModule = module {
+    single<HttpClient>(qualifier = named("HttpServer")) {
+        HttpClient(OkHttp) {
+            install(ContentNegotiation) {
+                json(Json {
+                    encodeDefaults = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
+            }
+            install(DefaultRequest) {
+                url("http://$BASE_URL")
+            }
+            expectSuccess = true
         }
     }
-
 }

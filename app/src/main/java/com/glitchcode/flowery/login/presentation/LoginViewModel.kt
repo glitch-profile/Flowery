@@ -7,14 +7,12 @@ import com.glitchcode.flowery.core.domain.repository.LocalAuthDataRepository
 import com.glitchcode.flowery.core.domain.utils.Resource
 import com.glitchcode.flowery.core.presentation.components.notification.SwipeableNotificationState
 import com.glitchcode.flowery.login.domain.usecases.AuthUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class LoginViewModel @Inject constructor(
     private val localAuthDataRepository: LocalAuthDataRepository,
     private val authUseCase: AuthUseCase

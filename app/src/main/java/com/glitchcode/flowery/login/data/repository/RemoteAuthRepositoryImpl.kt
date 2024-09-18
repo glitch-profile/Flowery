@@ -16,14 +16,12 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import javax.inject.Inject
-import javax.inject.Named
 
 private const val PATH = "/apiV1/auth"
 private const val AUTH_SESSION_KEY = "auth_session"
 
-class RemoteAuthRepositoryImpl @Inject constructor(
-    @Named("RestClient") private val client: HttpClient
+class RemoteAuthRepositoryImpl(
+    private val client: HttpClient
 ): RemoteAuthRepository {
 
     override suspend fun loginByPhone(phoneNumber: String): Resource<Unit> {

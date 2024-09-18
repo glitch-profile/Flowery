@@ -32,19 +32,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.glitchcode.flowery.R
 import com.glitchcode.flowery.core.presentation.components.FloweryButton
 import com.glitchcode.flowery.core.presentation.components.notification.SwipeableNotification
 import com.glitchcode.flowery.core.theme.icons.FloweryIcons
 import com.glitchcode.flowery.core.theme.icons.Warning
+import org.koin.androidx.compose.koinViewModel
 
 // TODO: When main content on home screen will be ready, rework this screen to a component, that will open on top of content
 
 @Composable
 fun NotAuthorizedScreen(
     onLoginClicked: () -> Unit,
-    viewModel: NotAuthorizedScreenViewModel = hiltViewModel()
+    viewModel: NotAuthorizedScreenViewModel = koinViewModel()
 ) {
     
     val notificationState = viewModel.notificationState

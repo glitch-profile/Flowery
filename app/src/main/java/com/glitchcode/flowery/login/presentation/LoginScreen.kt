@@ -56,7 +56,6 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.glitchcode.flowery.R
 import com.glitchcode.flowery.core.domain.utils.MaskVisualTransformation
 import com.glitchcode.flowery.core.presentation.components.FloweryButton
@@ -64,11 +63,12 @@ import com.glitchcode.flowery.core.presentation.components.FloweryFilledTextFiel
 import com.glitchcode.flowery.core.presentation.components.FloweryTextButton
 import com.glitchcode.flowery.core.presentation.components.FloweryTextButtonCompact
 import com.glitchcode.flowery.core.presentation.components.notification.SwipeableNotification
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
-    onNavigateToMainScreen: () -> Unit
+    onNavigateToMainScreen: () -> Unit,
+    viewModel: LoginViewModel = koinViewModel()
 ) {
     val notificationState = viewModel.notificationState
     val loginState = viewModel.loginState.collectAsState()

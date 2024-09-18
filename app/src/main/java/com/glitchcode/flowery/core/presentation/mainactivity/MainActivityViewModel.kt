@@ -5,18 +5,15 @@ import androidx.lifecycle.ViewModel
 import com.glitchcode.flowery.core.domain.repository.LocalAppearanceSettingsRepository
 import com.glitchcode.flowery.core.domain.repository.LocalAuthDataRepository
 import com.glitchcode.flowery.core.domain.utils.ScreenRoutes
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import javax.inject.Inject
 
 private const val IS_USING_SYSTEM_THEME = "isUsingSystemTheme"
 private const val IS_USING_DARK_THEME = "isUsingDarkTheme"
 private const val IS_USING_DYNAMIC_COLOR = "isUsingDynamicColor"
 
-@HiltViewModel
-class MainActivityViewModel @Inject constructor(
+class MainActivityViewModel(
     private val localAuthData: LocalAuthDataRepository,
     private val appearanceSettings: LocalAppearanceSettingsRepository
 ): ViewModel() {

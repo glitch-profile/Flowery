@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.glitchcode.flowery.core.domain.repository.LocalAuthDataRepository
 import com.glitchcode.flowery.core.domain.utils.EmployeeRoles
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 private const val PREFERENCES_NAME = "AuthDataPreferences"
@@ -15,8 +14,7 @@ private const val LOGGED_CLIENT_ID = "loggedClientId"
 private const val LOGGED_EMPLOYEE_ID = "loggedEmployeeId"
 private const val LOGGED_EMPLOYEE_ROLES = "loggedEmployeeRoles"
 
-class LocalAuthDataRepositoryImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+class LocalAuthDataRepositoryImpl @Inject constructor(private val context: Context
 ): LocalAuthDataRepository {
 
     override val preferences: SharedPreferences

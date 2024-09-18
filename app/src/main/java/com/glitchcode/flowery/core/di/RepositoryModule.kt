@@ -8,38 +8,25 @@ import com.glitchcode.flowery.core.domain.repository.LocalAuthDataRepository
 import com.glitchcode.flowery.core.domain.repository.LocalNotificationsSettingsRepository
 import com.glitchcode.flowery.login.data.repository.RemoteAuthRepositoryImpl
 import com.glitchcode.flowery.login.domain.repository.RemoteAuthRepository
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
+val repositoryModule = module {
+    // local repositories
+    single<LocalAuthDataRepository> {
+        LocalAuthDataRepositoryImpl(get())
+    }
 
-    @Binds
-    @Singleton
-    abstract fun bindsLocalAuthDataRepository(
-        localAuthDataRepositoryImpl: LocalAuthDataRepositoryImpl
-    ): LocalAuthDataRepository
+    single<LocalNotificationsSettingsRepository> {
+        LocalNotificationsSettingsRepositoryImpl(get())
+    }
 
-    @Binds
-    @Singleton
-    abstract fun bindsLocalAppearanceSettingsRepository(
-        localAppearanceSettingsRepositoryImpl: LocalAppearanceSettingsRepositoryImpl
-    ): LocalAppearanceSettingsRepository
+    single<LocalAppearanceSettingsRepository> {
+        LocalAppearanceSettingsRepositoryImpl(get())
+    }
 
-    @Binds
-    @Singleton
-    abstract fun bindsNotificationsSettingsRepository(
-        localNotificationsSettingsRepositoryImpl: LocalNotificationsSettingsRepositoryImpl
-    ): LocalNotificationsSettingsRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindsRemoteAuthRepository(
-        remoteAuthRepositoryImpl: RemoteAuthRepositoryImpl
-    ): RemoteAuthRepository
-
+    // remote sources
+    single<RemoteAuthRepository> {
+        RemoteAuthRepositoryImpl(get(qualifier = named("HttpServer")))
+    }
 }

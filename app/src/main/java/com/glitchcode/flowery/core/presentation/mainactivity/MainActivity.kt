@@ -2,7 +2,6 @@ package com.glitchcode.flowery.core.presentation.mainactivity
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
@@ -17,11 +16,10 @@ import com.glitchcode.flowery.core.theme.FloweryTheme
 import com.glitchcode.flowery.home.presentation.HomeScreen
 import com.glitchcode.flowery.home.presentation.NotAuthorizedScreen
 import com.glitchcode.flowery.login.presentation.LoginScreen
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    private val viewModel: MainActivityViewModel by viewModels()
+    private val viewModel: MainActivityViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
