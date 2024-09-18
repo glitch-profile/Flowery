@@ -8,7 +8,6 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import javax.inject.Named
 
 //private const val BASE_URL = "146.120.105.211:8081" //computer
 private const val BASE_URL = "192.168.116.121:8081" //notebook with mobile data
